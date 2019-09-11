@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+	<title>Browse</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="qrc:///web/css/jquery.mobile-1.4.5.min.css" />
+    <script src="qrc:///web/js/jquery-1.11.1.min.js"></script>
+    <script src="qrc:///web/radio/main.js"></script>
+    <script src="qrc:///web/js/jquery.mobile-1.4.5.min.js"></script>
+    <link rel="stylesheet" href="qrc:///web/radio/main.css" />
+
+    <link rel="stylesheet" href="qrc:///web/scroll.css" />
+    <script src="qrc:///web/js/common.js"></script>
+
+</head>
+<!-- oncontextmenu="return false;" -->
+<body  onselectstart="return false;" ondragstart="return false;" ondrop="return false;">
+
+    <img style="display:none;" src="" id="coverImage" />
+
+
+    <div data-role="header" data-theme="b" data-position="fixed" data-tap-toggle='false'>
+        <div data-role="tabs" id="tabs">
+            <div data-role="navbar">
+              <ul>
+                <li><a onclick="open_radio_page()" id="radio" >INTERNET RADIO</a></li>
+                <li><a onclick="open_favourite_page()" id="favourite" >FAVOURITE</a></li>
+              </ul>
+            </div>
+         </div> <!--tabs-->
+    </div><!-- /header -->
+
+    <div class="ui-loader-background"> </div>
+    <div id="radio_page" data-role="page" data-theme="b" data-title="INTERNET RADIO">
+        <div role="main" class="ui-content">
+            <!--search radio stations-->
+
+            <input id="radio_search_input" type="search" placeholder="Search by station,tag,country...">
+
+
+            <div data-role="collapsible" id="country" data-mini="true">
+                <h4>By Country</h4>
+                <!-- search country -->
+                <form class="ui-filterable">
+                     <input id="countryfilter-input" data-type="search" placeholder="Search by Country">
+                </form>
+                <ul data-input="#countryfilter-input" class="list" id="countries_result" data-split-icon="bars" data-filter="true"  data-role="listview"  data-split-theme="b" data-inset="false">
+                    <!--load data here-->
+                    <script>
+                        loadCountries();
+                    </script>
+                </ul>
+            </div>
+
+            <div data-role="collapsible" id="language" data-mini="true">
+                <h4>By Language</h4>
+                <!-- search language -->
+                <form class="ui-filterable">
+                     <input id="languagefilter-input" data-type="search" placeholder="Search by Language">
+                </form>
+                <ul data-input="#languagefilter-input" class="list" id="languages_result" data-split-icon="bars" data-filter="true" data-role="listview"   data-split-theme="b" data-inset="false">
+                    <!--load data here-->
+                    <script>
+                        loadLanguages();
+                    </script>
+                </ul>
+            </div>
+
+            <div data-role="tabs" id="tabs">
+              <div data-role="navbar">
+                <ul>
+                  <li  class="ui-state-persist"><a id="most-played-tab-anchor" class="ui-btn-active ui-state-persist" onclick="loadTopStations('most-played')" href="#most-played" data-ajax="false">Most Played</a></li>
+                  <li ><a id="most-voted-tab-anchor" href="#most-voted" onclick="loadTopStations('most-voted')" data-ajax="false">Most Voted</a></li>
+                </ul>
+              </div>
+              <div id="most-played-tab" >
+                <ul id="most-played" data-role="listview" data-inset="true" data-split-icon="bars" data-split-theme="b">
+                    <script>
+                        //loadTopStations("most-played");
+                    </script>
+                </ul>
+              </div>
+              <div id="most-voted-tab">
+                <ul id="most-voted" data-role="listview" data-inset="true" data-split-icon="bars" data-split-theme="b">
+                    <script>
+                         //loadTopStations("most-voted");
+                    </script>
+                </ul>
+              </div>
+            </div>
+
+        </div><!--main-->
+    </div><!--page-->
+
+
+    <!--    station page-->
+    <div style="height: 100%;" id="stations_page" data-role="page" data-theme="b" data-title="STATIONS">
+        <div role="main" class="ui-content">
+            <!-- search language -->
+            <form class="ui-filterable">
+                 <input id="station-list-filter-input" data-type="search" placeholder="Filter listed stations by name,tags,country,state,languages etc...">
+            </form>
+            <ul class="list" id="stations_result"  data-input="#station-list-filter-input" data-filter="true" data-role="listview" data-split-icon="bars" data-split-theme="b" data-inset="true">
+                <!--load data here-->
+            </ul>
+            <div data-role="footer" data-position="fixed" data-tap-toggle="false">
+                <a style="display: block;background-color: rgba(36, 142, 179, 0.5)" onclick="$.mobile.changePage($('#radio_page'));" class="ui-mini ui-btn ui-icon-back ui-btn-icon-left ui-corner-all">Back to Search</a>
+            </div><!-- /footer -->
+        </div>
+    </div>
+
+    <!--   favourite station page-->
+    <div id="favourite_page" data-role="page" data-theme="b" data-title="FAVOURITE">
+
+        <div class="ui-header ui-title ui-bar-b">
+                <h5 style="text-align: center;text-transform: capitalize;margin: 10px;" id="inner_header"></h5>
+        </div><!-- /header -->
+        <div role="main" class="ui-content">
+            <!-- search channels -->
+            <form class="ui-filterable">
+                 <input id="fav-station-list-filter-input" data-type="search" placeholder="Filter your favourite stations by name,tags,country,state,languages etc...">
+            </form>
+            <ul class="list" id="fav_stations_result"  data-input="#fav-station-list-filter-input" data-filter="true" data-role="listview" data-split-icon="bars" data-split-theme="b" data-inset="true">
+                <!--load data here-->
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
