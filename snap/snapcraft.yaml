@@ -55,6 +55,8 @@ apps:
         - gsettings
         - process-control
         - desktop-legacy
+        - wayland
+        - mount-observe
 
 plugs:
   gsettings:
@@ -79,6 +81,7 @@ parts:
    application:
      source-type: git
      source: https://github.com/keshavbhatt/kt.git
+#     source: .
      plugin: qmake
      qt-version: qt5
      override-build: |
@@ -98,8 +101,7 @@ parts:
        - dpkg-dev
        - libqt5webkit5-dev
    cleanup:
-     after: 
-        - application
+     after: [application]
      plugin: nil
      override-prime: |
          # Remove unneeded stage files to save space

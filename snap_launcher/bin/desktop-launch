@@ -130,6 +130,7 @@ WITH_RUNTIME=no
 
 if [ -d $SNAP/qt551 ]; then
   RUNTIME=$SNAP/qt551
+  WITH_RUNTIME=yes
 fi
 
 if [ -z "$RUNTIME" ]; then
@@ -188,6 +189,9 @@ export GST_PLUGIN_SCANNER=$RUNTIME/usr/lib/$ARCH/gstreamer1.0/gstreamer-1.0/gst-
 # XDG Config
 [ "$WITH_RUNTIME" = yes ] && prepend_dir XDG_CONFIG_DIRS $RUNTIME/etc/xdg
 prepend_dir XDG_CONFIG_DIRS $SNAP/etc/xdg
+
+# fix for wget cannot read wgetrc in /etc/wgetrc cause we using runtime
+export SYSTEM_WGETRC=$RUNTIME/etc/wgetrc
 
 # Define snaps' own data dir
 [ "$WITH_RUNTIME" = yes ] && prepend_dir XDG_DATA_DIRS $RUNTIME/usr/share
