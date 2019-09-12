@@ -76,13 +76,6 @@ plugs:
     default-provider: qt551
 
 parts:
-   dependency:
-     plugin: nil
-     stage-packages:
-            - socat
-            - python
-            - wget
-            - coreutils
    application:
      source-type: git
      source: https://github.com/keshavbhatt/kt.git
