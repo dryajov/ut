@@ -76,13 +76,24 @@ plugs:
     default-provider: qt551
 
 parts:
-   dependencies:
+   dependency:
      plugin: nil
      stage-packages:
             - socat
             - python
             - wget
             - coreutils
+   application:
+     source-type: git
+     source: https://github.com/keshavbhatt/kt.git
+     plugin: qmake
+     qt-version: qt5
+     override-build: |
+          snapcraftctl build
+          sed -i 's|Icon=.*|Icon=${SNAP}/meta/gui/icon.png|g' ${SNAPCRAFT_PART_SRC}/ktube-media-downloader.desktop
+          cp -rf ${SNAPCRAFT_PART_SRC}/ktube-media-downloader.desktop ${SNAPCRAFT_PART_INSTALL}/usr/share/applications/ktube-media-downloader.desktop
+     after: [desktop-qt5]
+     
    ppa:
      plugin: nil
      override-pull: |
@@ -92,31 +103,26 @@ parts:
        apt update
    mpv:
      plugin: nil
-     after: [ppa,qt]
+     after: [ppa,application]
      stage-packages:
            - mpv
            - ffmpeg
-   snap_launcher:
+   snap-launcher:
      plugin: dump
      source: snap_launcher/
-   qt:
-     plugin: qmake
-     qt-version: qt5
-     source-type: git
-     source: https://github.com/keshavbhatt/kt.git
+   desktop-qt5:
+     source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
+     source-subdir: qt
+     plugin: make
+     make-parameters: ["FLAVOR=qt5"]
      build-packages:
-            - build-essential
-            - qtbase5-dev
-            - libqt5webkit5-dev
-     override-build: |
-          snapcraftctl build
-          sed -i 's|Icon=.*|Icon=${SNAP}/meta/gui/icon.png|g' ${SNAPCRAFT_PART_SRC}/ktube-media-downloader.desktop
-          cp -rf ${SNAPCRAFT_PART_SRC}/ktube-media-downloader.desktop ${SNAPCRAFT_PART_INSTALL}/usr/share/applications/ktube-media-downloader.desktop
-     after: [desktop-qt5]
-
+       - build-essential
+       - qtbase5-dev
+       - dpkg-dev
+       - libqt5webkit5-dev
    cleanup:
      after: 
-        - qt
+        - application
      plugin: nil
      override-prime: |
          # Remove unneeded stage files to save space
