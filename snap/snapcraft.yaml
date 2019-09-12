@@ -92,7 +92,7 @@ parts:
           snapcraftctl build
           sed -i 's|Icon=.*|Icon=${SNAP}/meta/gui/icon.png|g' ${SNAPCRAFT_PART_SRC}/ktube-media-downloader.desktop
           cp -rf ${SNAPCRAFT_PART_SRC}/ktube-media-downloader.desktop ${SNAPCRAFT_PART_INSTALL}/usr/share/applications/ktube-media-downloader.desktop
-     after: [desktop-qt5]
+
      
    mpv:
      plugin: nil
@@ -103,16 +103,6 @@ parts:
    snap-launcher:
      plugin: dump
      source: snap_launcher/
-   desktop-qt5:
-     source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
-     source-subdir: qt
-     plugin: make
-     make-parameters: ["FLAVOR=qt5"]
-     build-packages:
-       - build-essential
-       - qtbase5-dev
-       - dpkg-dev
-       - libqt5webkit5-dev
    cleanup:
      after: 
         - application
