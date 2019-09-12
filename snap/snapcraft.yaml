@@ -94,16 +94,9 @@ parts:
           cp -rf ${SNAPCRAFT_PART_SRC}/ktube-media-downloader.desktop ${SNAPCRAFT_PART_INSTALL}/usr/share/applications/ktube-media-downloader.desktop
      after: [desktop-qt5]
      
-   ppa:
-     plugin: nil
-     override-pull: |
-       apt install wget
-       echo "deb http://ppa.launchpad.net/mc3man/mpv-tests/ubuntu xenial main" >>  /etc/apt/sources.list
-       wget -qO - http://ktechpit.com/USS/Olivia/snapcraft/mpv.key | apt-key add -
-       apt update
    mpv:
      plugin: nil
-     after: [ppa,application]
+     after: [application]
      stage-packages:
            - mpv
            - ffmpeg
