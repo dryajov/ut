@@ -26,6 +26,7 @@ description: |
 grade: stable
 confinement: strict
 icon: snap/gui/icon.png
+base: core18
 
 architectures:
   - build-on: amd64
@@ -37,6 +38,7 @@ apps:
     environment:
        QT_STYLE_OVERRIDE: "gtk"
        DISABLE_WAYLAND: 1
+       QT_QPA_PLATFORMTHEME: gtk3 
     desktop: usr/share/applications/ktube-media-downloader.desktop
     plugs:
         - home
@@ -55,18 +57,23 @@ apps:
         - desktop-legacy
 
 plugs:
+  gsettings:
   gtk-3-themes:
     interface: content
-    target: $SNAP/usr/share/themes
+    target: $SNAP/data-dir/themes
     default-provider: gtk-common-themes
   icon-themes:
     interface: content
-    target: $SNAP/usr/share/icons
+    target: $SNAP/data-dir/icons
     default-provider: gtk-common-themes
   sound-themes:
     interface: content
-    target: $SNAP/usr/share/sounds
+    target: $SNAP/data-dir/sounds
     default-provider: gtk-common-themes
+  qt551:
+    interface: content
+    target: $SNAP/qt551
+    default-provider: qt551
 
 parts:
    deps:
@@ -89,6 +96,9 @@ parts:
      stage-packages:
            - mpv
            - ffmpeg
+   snap_launcher:
+     plugin: dump
+     source: snap_launcher/
    qt:
      plugin: qmake
      qt-version: qt5
@@ -100,13 +110,7 @@ parts:
             - libqt5webkit5-dev
      stage:
           - -usr/share/pkgconfig
-     stage-packages:
-          - libqt5sql5-sqlite
-          - libqt5webkit5
-          - libqt5x11extras5
-          - libqt5xml5
-          - libdb5.3
-          - libglu1-mesa
+
      override-build: |
             snapcraftctl build
             sed -i 's|Icon=.*|Icon=${SNAP}/meta/gui/icon.png|g' ${SNAPCRAFT_PART_SRC}/ktube-media-downloader.desktop
