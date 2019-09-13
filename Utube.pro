@@ -11,7 +11,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TEMPLATE = app
 
 # Set program name
-TARGET = ktube-media-downloader
+TARGET = utube
 
 # Set program version
 VERSION = 0.0.1
@@ -103,10 +103,10 @@ DATADIR = $$PREFIX/share
 
 target.path = $$BINDIR
 
-icon.files = icons/ktube-media-downloader.png
+icon.files = icons/utube.png
 icon.path = $$DATADIR/icons/hicolor/512x512/apps/
 
-desktop.files = ktube-media-downloader.desktop
+desktop.files = utube.desktop
 desktop.path = $$DATADIR/applications/
 
 INSTALLS += target icon desktop

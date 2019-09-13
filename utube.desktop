@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+GenericName=Utube
+Name=Utube
+Type=Application
+Icon=utube
+Keywords=Music Player;itunes;spotify;youtube;download
+Exec=utube %F
+Categories=AudioVideo;Player;Qt;Audio;
+Terminal=false
+Name[en_US]=utube
