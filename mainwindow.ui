@@ -15,7 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="icons.qrc">
-    <normaloff>:/icons/ktube.png</normaloff>:/icons/ktube.png</iconset>
+    <normaloff>:/icons/utube.png</normaloff>:/icons/utube.png</iconset>
   </property>
   <property name="styleSheet">
    <string notr="true"/>

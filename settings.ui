@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Settings - Ktube Media Downloder</string>
+   <string/>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_3">
    <item>
@@ -458,7 +458,7 @@
                </property>
                <property name="icon">
                 <iconset resource="icons.qrc">
-                 <normaloff>:/icons/ktube.png</normaloff>:/icons/ktube.png</iconset>
+                 <normaloff>:/icons/utube.png</normaloff>:/icons/utube.png</iconset>
                </property>
                <property name="iconSize">
                 <size>

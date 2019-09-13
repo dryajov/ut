@@ -38,9 +38,9 @@ Lyrics::Lyrics(QWidget *parent) :
     QString setting_path =  QStandardPaths::writableLocation(QStandardPaths::DataLocation);
     QString cookieJarPath ;
     if(setting_path.split("/").last().isEmpty()){
-       cookieJarPath  =  setting_path+"/cookiejar_ktube.dat";
+       cookieJarPath  =  setting_path+"/cookiejar_"+QApplication::applicationName()+".dat";
     }else{
-       cookieJarPath  =  setting_path+"cookiejar_ktube.dat";
+       cookieJarPath  =  setting_path+"cookiejar_"+QApplication::applicationName()+".dat";
     }
     _networkManager->setCookieJar(new CookieJar(cookieJarPath,_networkManager));
     QNetworkDiskCache* diskCache = new QNetworkDiskCache(this);

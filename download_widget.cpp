@@ -857,7 +857,7 @@ void Widget::on_downloadList_itemDoubleClicked(QListWidgetItem *item)
          if(statusLabel->text().contains("finished",Qt::CaseInsensitive)){
              QProcess *player = new QProcess(this);
              player->setObjectName("player");
-             player->start("mpv",QStringList()<<"--title=MPV for Ktube Media Downloader - "+
+             player->start("mpv",QStringList()<<"--title=MPV for "+QApplication::applicationName()+" - "+
                            titleLabel->text().toUtf8()<<"--no-ytdl"<<files.at(0).filePath()
                            <<"--volume"<<QString::number(volume));
          }

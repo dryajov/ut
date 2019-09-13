@@ -1,28 +1,22 @@
-name: ktube-media-downloader-test
-version: '5'
-summary: Download / Play Media from various websites
+name: utube
+version: '1'
+summary: Download/Play Media from Youtube
 description: |
-  Official Website :-  https://keshavbhatt.github.io/Ktube-media-downloader/index.html
-  Ktube media downloader is very powerful tool to download media files from various sites,
-  Ktube provide a unique interface which allow you manage your favourite live streems, videos and music from youtube.com
+  Utube is very powerful tool to download media files from various sites,
+  Utube provide a unique interface which allow you manage your favourite videos and music from youtube.com
   You can download, play , save videos to your favourite list. Other features are -
   *play youtube
   *download youtube videos
   *download media in different formats, resolutions and qualities
-  *download media from other websites
-  *Play live streams from youtube
-  *save your favourite live streams to your channels list 
   *search youtube
   *filter your search
-  *multilingual
   *Show speed , eta , size , progress , time added etc in download item and also saves it
-  *have inbuild youtube player (No Flash , support HTML5 video playback)
+  *have inbuild youtube player (No Flash, Native Player included)
   *download videos with one click 
   *Multiple downloads
   *full history support 
   *very fast no glitches
-  Application allows users to download two links daily for free, to get full access to the application you
-  have to upgrade the application to pro.
+  You have to upgrade the application to pro for all features.
 grade: stable
 confinement: strict
 icon: snap/gui/icon.png
@@ -33,13 +27,13 @@ architectures:
     run-on: amd64
 
 apps:
-  ktube-media-downloader:
-    command: desktop-launch ktube-media-downloader
+  utube:
+    command: desktop-launch utube
     environment:
        QT_STYLE_OVERRIDE: "gtk"
        DISABLE_WAYLAND: 1
        QT_QPA_PLATFORMTHEME: gtk3 
-    desktop: usr/share/applications/ktube-media-downloader.desktop
+    desktop: usr/share/applications/utube.desktop
     plugs:
         - home
         - unity7
@@ -80,14 +74,14 @@ plugs:
 parts:
    application:
      source-type: git
-     source: https://github.com/keshavbhatt/kt.git
+     source: https://github.com/keshavbhatt/ut.git
 #     source: .
      plugin: qmake
      qt-version: qt5
      override-build: |
           snapcraftctl build
-          sed -i 's|Icon=.*|Icon=${SNAP}/meta/gui/icon.png|g' ${SNAPCRAFT_PART_SRC}/ktube-media-downloader.desktop
-          cp -rf ${SNAPCRAFT_PART_SRC}/ktube-media-downloader.desktop ${SNAPCRAFT_PART_INSTALL}/usr/share/applications/ktube-media-downloader.desktop
+          sed -i 's|Icon=.*|Icon=${SNAP}/meta/gui/icon.png|g' ${SNAPCRAFT_PART_SRC}/utube.desktop
+          cp -rf ${SNAPCRAFT_PART_SRC}/utube.desktop ${SNAPCRAFT_PART_INSTALL}/usr/share/applications/utube.desktop
      after: [desktop-qt5]
 
    snap-launcher:

@@ -101,5 +101,6 @@
         <file>icons/download_widget/empty.png</file>
         <file>icons/sidebar/spotify.png</file>
         <file>icons/ktube.png</file>
+        <file>icons/utube.png</file>
     </qresource>
 </RCC>

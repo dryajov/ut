@@ -373,7 +373,7 @@ function track_option(track_id){
                             '<a href="#" id="'+songId+'_addToQueue" >Add to queue</a>'+
                         '</li>'+
                         '<li>'+
-                            '<a href="#" id="'+songId+'_watchVideo" >Watch Video</a>'+
+                            '<a href="#" id="'+songId+'_watchVideo" onclick="watch_video(\''+songId+'\');$(\'#popup-'+songId +'\').remove();">Watch Video</a>'+
                         '</li>'+
                         '<li>'+
                             '<a href="#" onclick="open_channel(\''+channelHref.trim()+'\', \''+songId+'\')" >Open Channel</a>'+
@@ -385,7 +385,7 @@ function track_option(track_id){
                 link = "<span >id: "+ songId+"</span>",
                 closebtn = '<a href="#" data-rel="back" class="ui-btn ui-corner-all ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>',
                 header = '<div style="margin: -12px -12px 0px -12px;" data-role="header"><h2>Options</h2></div>',
-                img = '<img style="padding: 20px 0px 10px 0px;" src="'+coverUrl+'" alt="' + title + '" class="photo">',
+                img = '<img style="padding: 20px 0px 10px 0px; width:50% !important;height:50% !important;" src="'+coverUrl+'" alt="' + title + '" class="photo">',
                 details = $('#'+track_id).parent().find("p")[0].outerHTML,
                 popup = '<div data-history="false" style="text-align:center;padding:12px 12px; max-width:400px" data-transition="slideup" data-overlay-theme="b" data-dismissible="true" data-position-to="window" data-role="popup" id="popup-' + songId + '" data-short="' + songId +'"  data-corners="false" data-tolerance="15"></div>';
             $( link ).appendTo($( details ));
@@ -402,19 +402,24 @@ function track_option(track_id){
                 $( "#popup-" + songId ).popup( "open" ).trigger("create");
                 $('body').css('overflow','hidden');
 
+
+    $('body').css('overflow','auto');
+
+//        $("#"+songId+"_watchVideo").on("click",function(){
+//                showLoading();
+//                mainwindow.web_watch_video(songId+"<==>"+title+"<==>"+album+"<==>"+artist+"<==>"+coverUrl+"<==>"+songId+"<br>");
+//                $( '#popup-'+songId ).remove();
+//                $('body').css('overflow','auto');
+//                $.mobile.loading("hide");
+//        });
+
         $("#"+songId+"_addToQueue").on("click",function(){
                 $( this ).parent().parent().parent().parent().parent().find("#"+songId).click();
                 $( '#popup-'+songId ).remove();
                 $('body').css('overflow','auto');
         });
 
-        $("#"+songId+"_watchVideo").on("click",function(){
-                showLoading();
-                mainwindow.web_watch_video(songId+"<==>"+title+"<==>"+album+"<==>"+artist+"<==>"+coverUrl+"<==>"+songId+"<br>");
-                $( '#popup-'+songId ).remove();
-                $('body').css('overflow','auto');
-                $.mobile.loading("hide");
-        });
+
 
         $( document ).on( "popupbeforeposition", $('#popup-'+songId ), function() {
             $( '#popup-'+songId).find("ul").listview();

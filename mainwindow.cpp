@@ -193,6 +193,7 @@ void MainWindow::init_settings(){
     }
 
     settingsWidget = new QWidget(nullptr);
+    settingsWidget->setWindowTitle(QApplication::applicationName()+"- Settings");
     settingsWidget->setObjectName("settingsWidget");
     settingsUi.setupUi(settingsWidget);
     settingsWidget->setWindowFlags(Qt::Dialog);
@@ -479,9 +480,9 @@ const QColor& SelectColorButton::getColor(){
 //set up app #1
 void MainWindow::init_app(){
 
-    //ktube modifications
+    //utube modifications
     ui->top_widget->hide();
-    //ktube modifications
+    //utube modifications
 
     //init youtube class
     youtube = new Youtube(this);
@@ -498,8 +499,8 @@ void MainWindow::init_app(){
 
 
 
-    setWindowIcon(QIcon(":/icons/ktube.png"));
-    setWindowTitle("Ktube Media Downloader");
+    setWindowIcon(QIcon(":/icons/utube.png"));
+    setWindowTitle(QApplication::applicationName());
 
     ui->album->hide();
 
@@ -554,9 +555,9 @@ void MainWindow::init_webview(){
     QString setting_path =  QStandardPaths::writableLocation(QStandardPaths::DataLocation);
     QString cookieJarPath ;
     if(setting_path.split("/").last().isEmpty()){
-       cookieJarPath  =  setting_path+"/cookiejar_ktube.dat";
+       cookieJarPath  =  setting_path+"/cookiejar_"+QApplication::applicationName()+".dat";
     }else{
-       cookieJarPath  =  setting_path+"cookiejar_ktube.dat";
+       cookieJarPath  =  setting_path+"cookiejar_"+QApplication::applicationName()+".dat";
     }
 
     #ifdef QT_DEBUG
@@ -2026,7 +2027,7 @@ void MainWindow::compare_versions(QString date,QString n_date){
 
     if(update){
         QMessageBox msgBox;
-          msgBox.setText("Ktube Media Downloader Engine update (<b>ver: "+n_date+"</b>) available !");
+          msgBox.setText(QApplication::applicationName()+" Engine update (<b>ver: "+n_date+"</b>) available !");
           msgBox.setIcon(QMessageBox::Information);
           msgBox.setInformativeText("You are having an outdated engine (<b>ver: "+date+"</b>), please update to latest engine for better performance. Update now ?");
           msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
@@ -2048,9 +2049,9 @@ void MainWindow::compare_versions(QString date,QString n_date){
 void MainWindow::evoke_engine_check(){
     if(settingsUi.engine_status->text()=="Absent"){
         QMessageBox msgBox;
-          msgBox.setText("Ktube Media Downloader need to download its engine which is responsible for finding music online!");
+          msgBox.setText(QApplication::applicationName()+" need to download its engine which is responsible for finding music online!");
           msgBox.setIcon(QMessageBox::Information);
-          msgBox.setInformativeText("Ktube Media Downloader engine (1.4Mb in size) is youtube-dl with some modifications, without this the app will not work properly, Download now ?");
+          msgBox.setInformativeText(QApplication::applicationName()+" engine (1.4Mb in size) is youtube-dl with some modifications, without this the app will not work properly, Download now ?");
           msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
           QPushButton *p = new QPushButton("Quit",nullptr);
           msgBox.addButton(p,QMessageBox::NoRole);
@@ -2659,7 +2660,7 @@ void MainWindow::playVideo(QString trackId){
         QString titleLabel =store_manager->getTrack(trackId).at(1);
         QProcess *player = new QProcess(this);
         player->setObjectName("player");
-        player->start("mpv",QStringList()<<"--title=MPV for Ktube Media Downloader - "+
+        player->start("mpv",QStringList()<<"--title=MPV for "+QApplication::applicationName()+" - "+
                       titleLabel<<"--no-ytdl"<<files.at(0).filePath()<<"--volume"<<QString::number(radio_manager->volume)
                       );
     }else{

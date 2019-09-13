@@ -481,7 +481,7 @@ void VideoOption::playerReadyRead(){
     ui->download->setEnabled(false);
 
     ui->watch->setText("Playing...");
-    this->setWindowTitle("MPV for Ktube Media Downloader - "+currentTitle);
+    this->setWindowTitle("MPV for "+QApplication::applicationName()+" - "+currentTitle);
     if(!playerTimer->isActive()){
         playerTimer->start(500);
     }
