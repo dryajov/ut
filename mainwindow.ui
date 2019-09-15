@@ -1317,6 +1317,7 @@ border-radius:2px;</string>
     </property>
     <addaction name="actionHome"/>
     <addaction name="actionDownloaded_Videos"/>
+    <addaction name="actionDownloaded_Songs"/>
     <addaction name="actionFullscreen"/>
    </widget>
    <widget class="QMenu" name="menuFile">
@@ -1382,6 +1383,14 @@ border-radius:2px;</string>
    </property>
    <property name="shortcutContext">
     <enum>Qt::ApplicationShortcut</enum>
+   </property>
+  </action>
+  <action name="actionDownloaded_Songs">
+   <property name="text">
+    <string>Downloaded Songs</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+K</string>
    </property>
   </action>
  </widget>

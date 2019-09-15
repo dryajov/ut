@@ -705,24 +705,21 @@ void MainWindow::loadPlayerQueue(){ //  #7
 
             QGraphicsOpacityEffect *eff = new QGraphicsOpacityEffect(this);
 
-            item->setSizeHint(track_widget->minimumSizeHint());
-
             ui->right_list_2->setItemWidget(item, track_widget);
 
-            track_ui.cover->setMaximumHeight(track_widget->height());
-            track_ui.cover->setMaximumWidth(static_cast<int>(track_widget->height()*1.15));
+            track_ui.cover->setMaximumSize(149,90);
+            track_ui.cover->setMinimumSize(149,79);
+            track_ui.widget->adjustSize();
+            item->setSizeHint(track_widget->minimumSizeHint());
 
             ui->right_list_2->itemWidget(item)->setGraphicsEffect(eff);
 
             // checks if url is expired and updates item with new url which can be streamed .... until keeps the track item disabled.
             if(url.isEmpty() || (store_manager->getExpiry(songId) && track_ui.url->text().contains("http"))){
-            //track_ui.loading->setPixmap(QPixmap(":/icons/url_issue.png").scaled(track_ui.loading->size(),Qt::KeepAspectRatio,Qt::SmoothTransformation));
                 ui->right_list_2->itemWidget(item)->setEnabled(false);
                 if(!track_ui.id->text().isEmpty()){
                     getAudioStream(track_ui.id->text().trimmed(),track_ui.songId->text().trimmed());
                 }
-            }else{
-            //track_ui.loading->setPixmap(QPixmap(":/icons/blank.png").scaled(track_ui.loading->size(),Qt::KeepAspectRatio,Qt::SmoothTransformation));
             }
             QPropertyAnimation *a = new QPropertyAnimation(eff,"opacity");
             a->setDuration(500);
@@ -854,6 +851,11 @@ void MainWindow::webViewLoaded(bool loaded){
         ui->webview->history()->clear();
     }
 
+    if(pageType=="local_saved_songs"){
+        ui->webview->page()->mainFrame()->addToJavaScriptWindowObject(QString("store"), store_manager);
+        ui->webview->page()->mainFrame()->evaluateJavaScript(" open_local_saved_tracks();");
+    }
+
     if(pageType=="local_saved_videos"){
         ui->webview->page()->mainFrame()->addToJavaScriptWindowObject(QString("store"), store_manager);
         ui->webview->page()->mainFrame()->evaluateJavaScript("open_local_saved_videos();");
@@ -925,7 +927,6 @@ void MainWindow::addToQueue(QString id,QString title,QString artist,QString albu
         QString plainTitle = text.toPlainText();
 
 
-
         ElidedLabel *titleLabel = new ElidedLabel(plainTitle,nullptr);
         titleLabel->setFont(font);
         titleLabel->setObjectName("title_elided");
@@ -967,7 +968,13 @@ void MainWindow::addToQueue(QString id,QString title,QString artist,QString albu
             QListWidgetItem* item;
             item = new QListWidgetItem(ui->right_list_2);
             QGraphicsOpacityEffect *eff = new QGraphicsOpacityEffect(this);
+
+            //set size for track widget
+            track_ui.cover->setMaximumSize(149,90);
+            track_ui.cover->setMinimumSize(149,79);
+            track_ui.widget->adjustSize();
             item->setSizeHint(track_widget->minimumSizeHint());
+
             ui->right_list_2->setItemWidget(item, track_widget);
             ui->right_list_2->itemWidget(item)->setGraphicsEffect(eff);
             ui->right_list_2->itemWidget(item)->setEnabled(false); //enable when finds a url
@@ -990,30 +997,7 @@ void MainWindow::addToQueue(QString id,QString title,QString artist,QString albu
             }
             ui->tabWidget->setCurrentWidget(ui->tab_2);
             ui->right_list_2->scrollToBottom();
-        }else{
-//            QListWidgetItem* item;
-//            item = new QListWidgetItem(ui->right_list);
-
-//            QGraphicsOpacityEffect *eff = new QGraphicsOpacityEffect(this);
-
-//            item->setSizeHint(track_widget->minimumSizeHint());
-
-//            QPropertyAnimation *a = new QPropertyAnimation(eff,"opacity");
-//            a->setDuration(500);
-//            a->setStartValue(0);
-//            a->setEndValue(1);
-//            a->setEasingCurve(QEasingCurve::InCirc);
-//            a->start(QPropertyAnimation::DeleteWhenStopped);
-
-//            if(store_manager->isDownloaded(songId)){
-//                track_ui.url->setText("file://"+setting_path+"/downloadedTracks/"+songId);
-//                track_ui.offline->setPixmap(QPixmap(":/icons/offline.png").scaled(track_ui.offline->size(),Qt::KeepAspectRatio,Qt::SmoothTransformation));
-//            }else{
-//              getAudioStream(id,songId);
-//            }
-//            ui->tabWidget->setCurrentWidget(ui->tab);
         }
-
         //SAVE DATA TO LOCAL DATABASE
             store_manager->saveAlbumArt(albumId,base64);
             store_manager->saveArtist(artistId,artist);
@@ -1420,8 +1404,10 @@ void MainWindow::clear_youtubeSearchTerm(){
     youtubeSearchTerm.clear();
 }
 
-
-
+void MainWindow::show_local_saved_songs(){
+    pageType = "local_saved_songs";
+    ui->webview->load(QUrl("qrc:///web/local_songs/local_songs.html"));
+   }
 
 void MainWindow::show_local_saved_videos(){
     pageType = "local_saved_videos";
@@ -2711,4 +2697,9 @@ void MainWindow::on_actionQuit_triggered()
 void MainWindow::on_actionHome_triggered()
 {
     browse_youtube();
+}
+
+void MainWindow::on_actionDownloaded_Songs_triggered()
+{
+    show_local_saved_songs();
 }

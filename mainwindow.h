@@ -181,6 +181,10 @@ private slots:
 
 
     void show_local_saved_videos();
+
+    void show_local_saved_songs();
+
+
     void update_stats_right_list_2();
 
     void on_actionFullscreen_triggered();
@@ -192,6 +196,8 @@ private slots:
     void on_actionQuit_triggered();
 
     void on_actionHome_triggered();
+
+    void on_actionDownloaded_Songs_triggered();
 
 private:
     Widget *downloadWidget;
