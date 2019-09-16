@@ -56,15 +56,15 @@ plugs:
   gsettings:
   gtk-3-themes:
     interface: content
-    target: $SNAP/usr/share/themes
+    target: $SNAP/data-dir/themes
     default-provider: gtk-common-themes
   icon-themes:
     interface: content
-    target: $SNAP/usr/share/icons
+    target: $SNAP/data-dir/icons
     default-provider: gtk-common-themes
   sound-themes:
     interface: content
-    target: $SNAP/usr/share/sounds
+    target: $SNAP/data-dir/sounds
     default-provider: gtk-common-themes
   qt551:
     interface: content
