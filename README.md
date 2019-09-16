@@ -1,48 +1,16 @@
-![Olivia Banner Art](https://dashboard.snapcraft.io/site_media/appmedia/2019/03/banner_BPmKykd.png)
-
-# Olivia - Elegant music player for LINUX 
+# Utube - Elegant Youtube player/downloader for Linux Desktop
 
 being developed in BANKUBAD LABS by [@keshavbhatt](https://github.com/keshavbhatt)
 
-[![Snap Status](https://build.snapcraft.io/badge/keshavbhatt/olivia.svg)](https://build.snapcraft.io/user/keshavbhatt/olivia) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/keshavbhatt/olivia.svg)](http://isitmaintained.com/project/keshavbhatt/olivia "Average time to resolve an issue") [![Percentage of issues still open](http://isitmaintained.com/badge/open/keshavbhatt/olivia.svg)](http://isitmaintained.com/project/keshavbhatt/olivia "Percentage of issues still open") 
+[![Snap Status](https://build.snapcraft.io/badge/keshavbhatt/ut.svg)](https://build.snapcraft.io/user/keshavbhatt/olivia) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/keshavbhatt/ut.svg)](http://isitmaintained.com/project/keshavbhatt/olivia "Average time to resolve an issue") [![Percentage of issues still open](http://isitmaintained.com/badge/open/keshavbhatt/ut.svg)](http://isitmaintained.com/project/keshavbhatt/olivia "Percentage of issues still open") 
 
 ﻿**Nightly Build on any [snapd](https://docs.snapcraft.io/installing-snapd) enabled Linux Distribution can be installed using:**
 
-[![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/olivia-test)
-
-**Arch Linux ([AUR](https://aur.archlinux.org/packages/olivia/)):**
-
-![Arch Linux User's Repository ](http://badge.kloud51.com/aur/v/olivia.svg)  ![Maintainer](http://badge.kloud51.com/aur/m/olivia.svg) ![Popularity](http://badge.kloud51.com/aur/p/olivia.svg)
-
-**If you are having issues in desktop theming like big fonts and weird cursor theme**
-
-Run Olivia with the following command:
-
-    QT_STYLE_OVERRIDE='gtk' olivia-test.olivia
-
-**Features**
-* Allows search music online
-* Smart Music recommendation, can get you songs related to ant particular song 
-* Allows organize music 
-* Allows download song while streaming
-* Allows search YouTube and add result to library, sort results and other YouTube features
-* Plays audio only of YouTube streams (saves data bandwidth)
-* Support themes , Dynamic theme based on album art
-* Search suggestions
-* Player mini mode included , minimal player widget with always on capability and allows set transparency.
-* Internet radio, allows play more than 25k online radio stations, list them sort them according to language and country
-* Top music chart, allows list top 100 songs country wise
-* Top albums chart, allows list top 100 albums county wise
-* Beautiful Client side Decoration
-* Lyrics of playing songs and seperate lyrics search
-* Powerful audio equalizers and audio filters.
-* Watch video of any song you want in your preferred audio and video quality
-* More features like cloud synchronization of music using an online account coming soon
+[![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/utube)
 
 ﻿**Consider Donating if you want this music player grow further**
 
 [**PayPal Me**](https://paypal.me/keshavnrj/10)
-[**Become a Patreon**](https://www.patreon.com/keshavnrj/)
 
 ﻿**Build requirement**
 
@@ -67,7 +35,7 @@ Build:
     
 Execute :
 
-    ./olivia
+    ./utube
      
 ﻿
 ﻿**Or build a snap package**
@@ -83,8 +51,7 @@ Install snap with
     snap install --dangerous name_of_snap_file
 
 **ScreenShots:**
-![Olivia](https://dashboard.snapcraft.io/site_media/appmedia/2019/03/olivia_linux_ubuntu_1.jpeg)
-![Youtube plugin for Olivia on the play](https://dashboard.snapcraft.io/site_media/appmedia/2019/03/olivia_linux_ubuntu_2.jpeg)
-![Olivia Playing Internet radio](https://dashboard.snapcraft.io/site_media/appmedia/2019/03/olivia_linux_ubuntu_3.jpeg)
-![Album view Olivia](https://dashboard.snapcraft.io/site_media/appmedia/2019/03/olvia_linux_ubuntu_keshav_bhatt_4.jpeg)
+![Olivia](https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_860/https://dashboard.snapcraft.io/site_media/appmedia/2019/09/Screenshot_from_2019-09-13_16-45-41.png)
+![Utube watch and download with lyrics option widgets](https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_860/https://dashboard.snapcraft.io/site_media/appmedia/2019/09/Screenshot_from_2019-09-13_16-46-58.png)
+![Utube setting widget](https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_860/https://dashboard.snapcraft.io/site_media/appmedia/2019/09/Screenshot_from_2019-09-13_16-48-14.png)
 
