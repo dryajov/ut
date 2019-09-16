@@ -893,6 +893,7 @@ QList<QStringList> store::get_local_saved_tracks(int offset){
     return trackList;
 }
 
+// returns html string of local downloaded tracks
 QString store::web_print_local_saved_tracks(){
     limit = 20;
     totalTracks = getTrackCount("tracks","trackId");
