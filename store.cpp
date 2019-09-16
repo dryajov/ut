@@ -346,6 +346,7 @@ QList<QStringList> store::getAllTracks(){
     return trackList;
 }
 
+
 QList<QStringList> store::getAllVideos(){
     QList<QStringList> trackList ;
     QString setting_path =  QStandardPaths::writableLocation(QStandardPaths::DataLocation);
@@ -704,40 +705,7 @@ QString store::web_print_fav_radio_channels(){
     return json.toJson();
 }
 
-// returns json array string of local downloaded tracks
-QString store::web_print_local_saved_tracks(){
-    qDebug()<<"LOAD LOCAL SAVED TRACKS";
-    QJsonDocument json;
-    QJsonArray recordsArray;
-    foreach (QStringList trackList, getAllTracks()) {
-        QJsonObject recordObject;
-        QString id,title,artist,album,base64,dominantColor,songId,albumId,artistId,url;
-        songId = trackList.at(0);
-        title = trackList.at(1);
-        albumId = trackList.at(2);
-        album = trackList.at(3);
-        artistId = trackList.at(4);
-        artist = trackList.at(5);
-        base64 = trackList.at(6);
-        url = trackList.at(7);
-        id = trackList.at(8);
-        dominantColor = trackList.at(9);
-        if(!songId.trimmed().isEmpty() && isDownloaded(songId)){
-            recordObject.insert("songId",songId);
-            recordObject.insert("title",title);
-            recordObject.insert("albumId",albumId);
-            recordObject.insert("album",album);
-            recordObject.insert("artistId",artistId);
-            recordObject.insert("artist",artist);
-            recordObject.insert("base64",base64);
-            recordObject.insert("url",url);
-            recordObject.insert("id",id);
-            recordsArray.push_back(recordObject);
-        }
-    }
-    json.setArray(recordsArray);
-    return json.toJson();
-}
+
 
 // returns json array string of local downloaded videos
 QString store::web_print_local_saved_videos(){
@@ -903,3 +871,109 @@ QString store::web_print_album_tracks(QVariant albumId){
     json.setArray(recordsArray);
     return json.toJson();
 }
+
+
+//NOT IN OLIVIA
+//===========================================================PAGINATION===========================================================
+//get the records count in a given row of table
+int store::getTrackCount(QString fromTable,QString fromRow){
+    QSqlQuery query;
+    query.exec("SELECT "+fromRow+" FROM "+fromTable+" WHERE downloaded = 1");
+    int count = 0;
+    while(query.next()){
+         count++;
+    }
+    return count;
+}
+
+QList<QStringList> store::get_local_saved_tracks(int offset){
+    QSqlQuery query;
+    QList<QStringList> trackList ;
+    query.exec("SELECT trackId FROM tracks WHERE downloaded = 1 ORDER BY title ASC LIMIT "+QString::number(limit)+" OFFSET "+QString::number(offset));
+        while(query.next()){
+             trackList.append(getTrack(query.value("trackId").toString()));
+        }
+    return trackList;
+}
+
+QString store::web_print_local_saved_tracks(){
+    limit = 20;
+    totalTracks = getTrackCount("tracks","trackId");
+    totalPages = totalTracks/limit;
+    int itemsLeft = totalTracks -(totalPages*limit);
+    if(itemsLeft>0){
+        totalPages += 1;
+    }
+    currentPageNumber = 0;
+    return open_local_saved_tracks_PageNumber(currentPageNumber);
+}
+
+QString store::open_local_saved_tracks_PageNumber(int pageNumber){
+    currentPageNumber = pageNumber;
+    QString Next,Previous,pagination,script,head;
+    head = "<p>showing page "+QString::number(currentPageNumber+1)+" of "+QString::number(totalPages)+" pages.</p>";
+    script = "<script>$(\".ui-page-active [data-role='header'] h1\").html(\""+QString::number(totalTracks)+" downloaded songs\");</script>";
+
+    Next = "<button class='ui-btn ui-mini ui-icon-arrow-r ui-btn-icon-right ui-shadow ui-corner-all'"+
+            QString(" style='float:right;width:40%;background-color: rgba(36, 142, 179, 0.66);border: none;'")+
+            " id='navBtn'"+
+            " onclick='openPagenumber(\""+QString::number(currentPageNumber+1)+"\")'"+
+            ">Next</button>";
+    Previous = "<button class='ui-btn ui-mini ui-icon-arrow-l ui-btn-icon-left ui-shadow ui-corner-all'"+
+            QString(" style='float:left;width:40%;background-color: rgba(36, 142, 179, 0.66);border: none;'")+
+            " id='navBtn'"+
+            " onclick='openPagenumber(\""+QString::number(currentPageNumber-1)+"\")'"+
+            ">Previous</button>";
+
+    qDebug()<<totalTracks<<totalPages<<pageNumber;
+    if(pageNumber != 0 && pageNumber <= totalPages)
+        pagination += Previous;
+    if(totalPages > 0 && pageNumber+1 < totalPages)
+        pagination += Next;
+
+
+    //case for local_saved_tracks
+    if(1==1){
+        QString html,li;
+        int offset = pageNumber * limit;
+        foreach (QStringList trackList, get_local_saved_tracks(offset)) {
+
+            QString id,title,artist,album,base64,dominantColor,songId,albumId,artistId,url;
+            songId = trackList.at(0);
+            title = trackList.at(1);
+            albumId = trackList.at(2);
+            album = trackList.at(3);
+            artistId = trackList.at(4);
+            artist = trackList.at(5);
+            base64 = trackList.at(6);
+            url = trackList.at(7);
+            id = trackList.at(8);
+            dominantColor = trackList.at(9);
+
+            li += "<li onclick='mainwindow.playLocalTrack(\""+songId+"\")' data-filtertext='"+title+" "+album+" "+artist+"' ><a>"+
+            "<img id='"+songId+"' style='max-width:320px;max-height:180px;width=160px;height=79px;'  src='data:image/png;base64,"+base64+"'\\>"+
+                    "<p>"+
+                        ""+ title+
+                        "<br>"+
+                        "Album: "+album+
+                        "<br>"+
+                        "Artist: "+artist+
+                    "</p>"+
+               " </a>"+
+            "</li>";
+        }
+        html =  head+
+                "<ul style='margin-right: 20px;' data-input='#songsfilter-input' class='list' id='saved_tracks_result' data-filter='true'  data-role='listview' data-split-icon='gear' data-split-theme='b' data-inset='true'>"
+                +li
+                +"</ul>"
+                +pagination+script;
+        return html;
+    }else{
+        return "No data returned";
+    }
+}
+
+
+
+
+
