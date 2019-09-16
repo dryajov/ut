@@ -903,7 +903,7 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0.129
                <widget class="QFrame" name="frame">
                 <property name="minimumSize">
                  <size>
-                  <width>220</width>
+                  <width>200</width>
                   <height>0</height>
                  </size>
                 </property>
@@ -1237,6 +1237,12 @@ QSlider::sub-page:horizontal:disabled{
                 </item>
                 <item>
                  <widget class="seekSlider" name="radioSeekSlider">
+                  <property name="minimumSize">
+                   <size>
+                    <width>176</width>
+                    <height>0</height>
+                   </size>
+                  </property>
                   <property name="styleSheet">
                    <string notr="true">QSlider::handle:horizontal{
   border-radius:4px;
