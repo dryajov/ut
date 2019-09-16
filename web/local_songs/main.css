@@ -10,6 +10,10 @@
     line-height: 1.8em;
 }
 
+.ui-listview .ui-li-has-thumb>.ui-btn>img:first-child{
+    max-height:100%;
+    max-width:144px;
+}
 
 .ui-mobile a img{
     height:100%;
