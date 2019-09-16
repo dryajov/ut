@@ -922,7 +922,7 @@ QString store::open_local_saved_tracks_PageNumber(int pageNumber){
             " onclick='openPagenumber(\""+QString::number(currentPageNumber-1)+"\")'"+
             ">Previous</button>";
 
-    qDebug()<<totalTracks<<totalPages<<pageNumber;
+   // qDebug()<<totalTracks<<totalPages<<pageNumber;
     if(pageNumber != 0 && pageNumber <= totalPages)
         pagination += Previous;
     if(totalPages > 0 && pageNumber+1 < totalPages)
@@ -930,7 +930,7 @@ QString store::open_local_saved_tracks_PageNumber(int pageNumber){
 
 
     //case for local_saved_tracks
-    if(1==1){
+    if(totalPages>0){
         QString html,li;
         int offset = pageNumber * limit;
         foreach (QStringList trackList, get_local_saved_tracks(offset)) {
