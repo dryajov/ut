@@ -74,7 +74,6 @@ $(document).ready(function($) {
 
 //  core functions -------------
 function open_local_saved_tracks(){
-
     showLoading();
     $.mobile.changePage($('#tracks_page'));
     $('.ui-content').hide();
