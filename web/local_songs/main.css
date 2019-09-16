@@ -6,14 +6,10 @@
 #container .grid li { float: left; width: 20%; height: 50px; border-right: 1px dotted #CCC; border-bottom: 1px dotted #CCC; padding: 20px; }
 
 .ui-listview>li p {
-    margin-left: 1.1em;
+    margin-left: 7.5em;
     line-height: 1.8em;
 }
 
-.ui-listview .ui-li-has-thumb>.ui-btn>img:first-child{
-    max-height:100%;
-    max-width:144px;
-}
 
 .ui-mobile a img{
     height:100%;
