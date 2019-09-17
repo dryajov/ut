@@ -870,9 +870,7 @@ void MainWindow::webViewLoaded(bool loaded){
     }
 
     if(pageType=="goto_youtube_recommendation"){
-//        browse_youtube();
         if(!youtubeVideoId.isEmpty()){
-
             ui->webview->page()->mainFrame()->addToJavaScriptWindowObject(QString("youtube"),  youtube);
             ui->webview->page()->mainFrame()->addToJavaScriptWindowObject(QString("mainwindow"), this);
             QString trackTitle = QString(store_manager->getTrack(youtubeVideoId).at(1)).remove("'").remove("\"");
@@ -1027,23 +1025,17 @@ void MainWindow::showTrackOption(){
     QString albumId = store_manager->getAlbumId(songId);
     QString artistId = store_manager->getArtistId(songId);
 
-    QAction *showRecommendation = new QAction("Spotify Recommendations",nullptr);
-    QAction *watchVideo = new QAction("Watch Video",nullptr);
+     QAction *watchVideo = new QAction("Watch Video",nullptr);
     QAction *showLyrics = new QAction("Show Lyrics",nullptr);
     QAction *openChannel = new QAction("Open Channel",nullptr);
     QAction *youtubeShowRecommendation= new QAction("Youtube Recommendations",nullptr);
-    QAction *gotoArtist= new QAction("Go to Artist",nullptr);
-    QAction *gotoAlbum = new QAction("Go to Album",nullptr);   
     QAction *removeSong = new QAction("Remove from queue",nullptr);
     QAction *deleteSongCache = new QAction("Delete song cache",nullptr);
     deleteSongCache->setEnabled(store_manager->isDownloaded(songId));
 
     //setIcons
     youtubeShowRecommendation->setIcon(QIcon(":/icons/sidebar/youtube.png"));
-    showRecommendation->setIcon(QIcon(":/icons/sidebar/spotify.png"));
     watchVideo->setIcon(QIcon(":/icons/sidebar/video.png"));
-    gotoArtist->setIcon(QIcon(":/icons/sidebar/artist.png"));
-    gotoAlbum->setIcon(QIcon(":/icons/sidebar/album.png"));
     showLyrics->setIcon(QIcon(":/icons/sidebar/playlist.png"));
     openChannel->setIcon(QIcon(":/icons/sidebar/artist.png"));
     removeSong->setIcon(QIcon(":/icons/sidebar/remove.png"));
@@ -1062,13 +1054,6 @@ void MainWindow::showTrackOption(){
        lyricsWidget->setStyleSheet("");
        lyricsWidget->setCustomStyle(ui->search->styleSheet(),ui->right_list_2->styleSheet(),this->styleSheet());
        lyricsWidget->setQueryString(htmlToPlainText(lyrics_search_string));
-    });
-
-
-    connect(showRecommendation,&QAction::triggered,[=](){
-        ui->webview->load(QUrl("qrc:///web/recommendation/recommendation.html"));
-        pageType = "recommendation";
-        recommendationSongId = songId;
     });
 
     connect(youtubeShowRecommendation,&QAction::triggered,[=](){
@@ -1101,18 +1086,6 @@ void MainWindow::showTrackOption(){
         ui->webview->load(QUrl("qrc:///web/youtube/youtube.html"));
         pageType = "goto_youtube_channel";
         youtubeVideoId = songId;
-    });
-
-    connect(gotoAlbum,&QAction::triggered,[=](){
-        ui->webview->load(QUrl("qrc:///web/goto/album.html"));
-        pageType = "goto_album";
-        gotoAlbumId = albumId;
-    });
-
-    connect(gotoArtist,&QAction::triggered,[=](){
-        ui->webview->load(QUrl("qrc:///web/goto/artist.html"));
-        pageType = "goto_artist";
-        gotoArtistId = artistId;
     });
 
     connect(deleteSongCache,&QAction::triggered,[=](){
@@ -1151,14 +1124,7 @@ void MainWindow::showTrackOption(){
     if(!albumId.contains("undefined")){// do not add gotoalbum and gotoartist actions to youtube streams
         menu.addAction(showLyrics);
         menu.addAction(watchVideo);
-        if(!isNumericStr(songId)) //spotify song ids are not numeric
-        {
-            menu.addAction(showRecommendation);
-        }
-        //added youtube recommendation fallback for itunes tracks ids
         menu.addAction(youtubeShowRecommendation);
-        menu.addAction(gotoAlbum);
-        menu.addAction(gotoArtist);
     }else{
         menu.addSeparator();
         menu.addAction(showLyrics);
