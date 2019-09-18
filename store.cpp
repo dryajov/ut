@@ -908,20 +908,20 @@ QString store::web_print_local_saved_tracks(){
 
 QString store::open_local_saved_tracks_PageNumber(int pageNumber){
     currentPageNumber = pageNumber;
-    QString Next,Previous,pagination,script,head;
-    head = "<p>showing page "+QString::number(currentPageNumber+1)+" of "+QString::number(totalPages)+" pages.</p>";
+    QString Next,Previous,pagination,script,head,footer;
+    head = "<p style='margin-top: -5px;'>showing page "+QString::number(currentPageNumber+1)+" of "+QString::number(totalPages)+" pages.</p>";
     script = "<script>$(\".ui-page-active [data-role='header'] h1\").html(\""+QString::number(totalTracks)+" downloaded songs\");</script>";
 
-    Next = "<button class='ui-btn ui-mini ui-icon-arrow-r ui-btn-icon-right ui-shadow ui-corner-all'"+
+    Next = "<a class='ui-btn ui-mini ui-icon-arrow-r ui-btn-icon-right ui-shadow ui-corner-all'"+
             QString(" style='float:right;width:40%;background-color: rgba(36, 142, 179, 0.66);border: none;'")+
             " id='navBtn'"+
             " onclick='openPagenumber(\""+QString::number(currentPageNumber+1)+"\")'"+
-            ">Next</button>";
-    Previous = "<button class='ui-btn ui-mini ui-icon-arrow-l ui-btn-icon-left ui-shadow ui-corner-all'"+
+            ">Next</a>";
+    Previous = "<a class='ui-btn ui-mini ui-icon-arrow-l ui-btn-icon-left ui-shadow ui-corner-all'"+
             QString(" style='float:left;width:40%;background-color: rgba(36, 142, 179, 0.66);border: none;'")+
             " id='navBtn'"+
             " onclick='openPagenumber(\""+QString::number(currentPageNumber-1)+"\")'"+
-            ">Previous</button>";
+            ">Previous</a>";
 
    // qDebug()<<totalTracks<<totalPages<<pageNumber;
     if(pageNumber != 0 && pageNumber <= totalPages)
@@ -929,6 +929,11 @@ QString store::open_local_saved_tracks_PageNumber(int pageNumber){
     if(totalPages > 0 && pageNumber+1 < totalPages)
         pagination += Next;
 
+    if(!pagination.trimmed().isEmpty()){
+        footer = "<div style='background-color: rgba(29, 29, 29, 0.64);' data-role='footer'data-position='fixed' data-tap-toggle='false'>"+
+                    pagination+
+                 "</div>";
+    }
 
     //case for local_saved_tracks
     if(totalPages>0){
@@ -961,10 +966,10 @@ QString store::open_local_saved_tracks_PageNumber(int pageNumber){
             "</li>";
         }
         html =  head+
-                "<ul style='margin-right: 20px;' data-input='#songsfilter-input' class='list' id='saved_tracks_result' data-filter='true'  data-role='listview' data-split-icon='gear' data-split-theme='b' data-inset='true'>"
+                "<ul' style='margin-bottom: 48px;display: block;' data-input='#songsfilter-input' class='list' id='saved_tracks_result' data-filter='true'  data-role='listview' data-split-icon='gear' data-split-theme='b' data-inset='true'>"
                 +li
                 +"</ul>"
-                +pagination+script;
+                +script+footer;
         return html;
     }else{
         return "No data returned";
