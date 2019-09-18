@@ -32,7 +32,7 @@ apps:
     environment:
        QT_STYLE_OVERRIDE: "gtk"
        DISABLE_WAYLAND: 1
-       QT_QPA_PLATFORMTHEME: gtk3 
+#       QT_QPA_PLATFORMTHEME: gtk3 
     desktop: usr/share/applications/utube.desktop
     plugs:
         - home
