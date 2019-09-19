@@ -1001,6 +1001,10 @@ void MainWindow::addToQueue(QString id,QString title,QString artist,QString albu
                 track_ui.offline->setPixmap(QPixmap(":/icons/offline.png").scaled(track_ui.offline->size(),Qt::KeepAspectRatio,Qt::SmoothTransformation));
             }else{
               getAudioStream(id,songId);
+              //reverse the process queue, so that recently added song can get first chance to process
+              if(ytdlQueue.count()>1){
+                  ytdlQueue.insert(1,  ytdlQueue.takeAt(ytdlQueue.count()-1));
+              }
             }
             ui->tabWidget->setCurrentWidget(ui->tab_2);
             ui->right_list_2->scrollToBottom();
