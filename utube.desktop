@@ -8,4 +8,4 @@ Keywords=Music Player;itunes;spotify;youtube;download
 Exec=utube %F
 Categories=AudioVideo;Player;Qt;Audio;
 Terminal=false
-Name[en_US]=utube
+Name[en_US]=Utube
