@@ -425,6 +425,8 @@ void MainWindow::set_app_theme(QColor rgb){
     ui->right_panel->setStyleSheet("QWidget#right_panel{"+widgetStyle+"}");
     ui->right_list_2->setStyleSheet("QListWidget{"+widgetStyle+"}"+scrollbarStyle);
 
+    ui->search->setStyleSheet(widgetStyle+"border:none;border-radius:0px;");
+
     settingsWidget->setStyleSheet("QWidget#settingsWidget{"+widgetStyle+"}");
     ui->tabWidget->setStyleSheet("QTabWidget#tabWidget{"+widgetStyle+"}"); //to remove style set by designer
 
@@ -446,7 +448,7 @@ void MainWindow::set_app_theme(QColor rgb){
     settingsUi.delete_tracks_cache->setStyleSheet(btn_style);
     settingsUi.drop_database->setStyleSheet(btn_style);
 
-    ui->search->setStyleSheet(widgetStyle+"border:none;border-radius:0px;");
+
 }
 
 void MainWindow::customColor(){
@@ -1560,6 +1562,8 @@ void MainWindow::listItemDoubleClicked(QListWidget *list,QListWidgetItem *item){
                                 "}";
         ui->right_panel->setStyleSheet("QWidget#right_panel{"+widgetStyle+"}");
         ui->right_list_2->setStyleSheet("QListWidget{"+widgetStyle+"}"+scrollbarStyle);
+
+        ui->search->setStyleSheet(widgetStyle+"border:none;border-radius:0px;");
 
         //settingsUi theme is set when it is opened;
         ui->stream_info->setStyleSheet("QWidget#stream_info{"+widgetStyle+"}"); //to remove style set by designer
