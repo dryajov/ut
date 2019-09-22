@@ -211,7 +211,10 @@ void VideoOption::setMetaFromWeb(QVariant data){
 
     getVideoStream(ytIds,songId);
 
-    // qDebug()<<ytIds<<title<<artist<<album<<coverUrl<<songId<<dominantColor<<artistId<<albumId<<base64;
+     //qDebug()<<ytIds<<title<<artist<<album<<coverUrl<<songId<<dominantColor<<artistId<<albumId<<base64;
+     base64.remove("data:image/jpeg;base64,");
+     base64.remove("data:image/jpg;base64,");
+     base64.remove("data:image/png;base64,");
     //save track to store
     store_manager->saveAlbumArt(albumId,base64);
     store_manager->saveArtist(artistId,artist);
