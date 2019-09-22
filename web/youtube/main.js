@@ -56,6 +56,8 @@ var artist_loaded = false;
 
 $(document).ready(function($) {
 
+    colorThief = new ColorThief(); // colorThief object init
+
     $(function () {
         $('[data-role=popup]').popup().enhanceWithin();
     });
@@ -64,9 +66,9 @@ $(document).ready(function($) {
            $.mobile.defaultHomeScroll = 0;
     });
 
-    $("#coverImage").load(function(){
-          dominantColor = colorThief.getColor(document.querySelector("#coverImage"));
-    });
+//    $("#coverImage").load(function(){
+//          dominantColor = colorThief.getColor(document.querySelector("#coverImage"));
+//    });
 });
 
 
@@ -128,7 +130,6 @@ function toDataUrl(url, callback) {
 
 function gettrackinfo(searchterm){
     var videoId;
-    colorThief = new ColorThief();
     var arr = searchterm.split("!=-=!")
     title = arr[0];
     artist = arr[1];
@@ -145,33 +146,38 @@ function gettrackinfo(searchterm){
 
     var query = title.replace("N/A","")+" - "+artist.replace("N/A",""); //+" - "+album.replace("N/A","")
 
-    console.log(query);
+ //   console.log(query);
 
     showLoading();
 
     toDataUrl(coverUrl, function(myBase64) {
         base64 = myBase64;
         document.querySelector("#coverImage").setAttribute("src",coverUrl);
-        if(albumId.includes("undefined")){
-            mainwindow.addToQueue(videoId+"<br>",title,artist,album,base64,dominantColor,songId,albumId,artistId);
-            $.mobile.loading("hide");
-        }else{
-            $.ajax({
-                url: baseUrl+"youtube.php",
-                       type:"GET",
-                       data:{
+        var img = document.querySelector("#coverImage");
+        if (!img.complete) {
+            img.addEventListener('load', function handler(e) {
+                e.currentTarget.removeEventListener(e.type, handler);
+                dominantColor = colorThief.getColor(img);
+                if(albumId.includes("undefined")){
+                    mainwindow.addToQueue(videoId+"<br>",title,artist,album,base64,dominantColor,songId,albumId,artistId);
+                    $.mobile.loading("hide");
+                }else{
+                    $.ajax({
+                        url: baseUrl+"youtube.php",
+                           type:"GET",
+                           data:{
                             "query": query,
                             "millis": millis
-                       },
-                success: function(html) {
-                    html_data =html;
-                    mainwindow.addToQueue(html_data,title,artist,album,base64,dominantColor,songId,albumId,artistId);
-                    $.mobile.loading("hide");
+                           },
+                        success: function(html) {
+                            html_data = html;
+                            mainwindow.addToQueue(html_data,title,artist,album,base64,dominantColor,songId,albumId,artistId);
+                            $.mobile.loading("hide");
+                        }
+                    });
                 }
             });
         }
-
-
     });
 }
 
@@ -363,8 +369,20 @@ function watch_video(track_id){
     artistId= arr[6];
     millis = arr[7];
     showLoading();
-    mainwindow.web_watch_video(songId+"<==>"+title+"<==>"+album+"<==>"+artist+"<==>"+coverUrl+"<==>"+songId+"<br>");
-    $.mobile.loading("hide");
+
+    toDataUrl(coverUrl, function(myBase64) {
+        document.querySelector("#coverImage").setAttribute("src",coverUrl);
+        base64 = myBase64;
+        var img = document.querySelector("#coverImage");
+        if (!img.complete) {
+          img.addEventListener('load', function handler(e) {
+              e.currentTarget.removeEventListener(e.type, handler);
+              dominantColor = colorThief.getColor(img);
+              mainwindow.web_watch_video(songId+"<==>"+title+"<==>"+album+"<==>"+artist+"<==>"+coverUrl+"<==>"+songId+"<br>"+"<==>"+base64+"<==>"+dominantColor+"<==>"+artistId+"<==>"+albumId);
+              $.mobile.loading("hide");
+          });
+        }
+    });
 }
 
 function track_option(track_id){
