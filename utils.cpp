@@ -76,3 +76,4 @@ QString utils::toCamelCase(const QString& s)
     return parts.join(" ");
 }
 
+

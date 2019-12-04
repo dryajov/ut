@@ -952,21 +952,33 @@ QString store::open_local_saved_tracks_PageNumber(int pageNumber){
             url = trackList.at(7);
             id = trackList.at(8);
             dominantColor = trackList.at(9);
+            QString divider = "!=-=!";
 
-            li += "<li onclick='mainwindow.playLocalTrack(\""+songId+"\")' data-filtertext='"+title+" "+album+" "+artist+"' ><a>"+
-            "<img id='"+songId+"' style='max-width:320px;max-height:180px;width=160px;height=79px;'  src='data:image/png;base64,"+base64+"'\\>"+
-                    "<p>"+
+            QString albumType = (album == "undefined") ? "Youtube":"";
+            QString imgHtml,para;
+                   if(albumId.contains("undefined-")){
+                       para = "<p style='margin-left: 7.5em;'>";
+                       imgHtml = "<img id='"+songId+"' style='max-width:178px;max-height:144px;width=178px;height=100px;' id='' src='data:image/png;base64,"+base64+"' />";
+                   }else{
+                       para = "<p style='margin-left: 14.5em;' >";
+                       imgHtml = "<p style='background-color:rgb("+dominantColor+");' class='li-img-wrapper'><img id='"+songId+"' style='width:100%;max-width:100px;max-height:144px;width=100px;height=100px;' id='' src='data:image/png;base64,"+base64+"' /></p>";
+                   }
+            li += "<li data-filtertext='"+title+" "+album+" "+artist+"' >"+
+            "<a data-trackinfo='"+title+divider+artist+divider+album+divider+base64+divider+songId+divider+albumId+divider+artistId+divider+"millis"+"' onclick='mainwindow.playLocalTrack(\""+songId+"\")'>"
+                    +imgHtml+para+
                         ""+ title+
                         "<br>"+
-                        "Album: "+album+
+                        "Album: "+QString(album=="undefined"?"Youtube":album)+
                         "<br>"+
                         "Artist: "+artist+
                     "</p>"+
+                    "<p class='ui-li-aside'>"+albumType+"</p>" +
                " </a>"+
+               "<a href='#' onclick=\"track_option('"+songId+"')\">More Options</a>"+
             "</li>";
         }
         html =  head+
-                "<ul' style='margin-bottom: 48px;display: block;' data-input='#songsfilter-input' class='list' id='saved_tracks_result' data-filter='true'  data-role='listview' data-split-icon='gear' data-split-theme='b' data-inset='true'>"
+                "<ul style='margin-bottom: 60px;'  class='list' id='saved_tracks_result'   data-role='listview' data-split-icon='bars' data-split-theme='b' data-inset='true'>"
                 +li
                 +"</ul>"
                 +script+footer;

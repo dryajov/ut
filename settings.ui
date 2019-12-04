@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>446</width>
-    <height>432</height>
+    <width>448</width>
+    <height>311</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -33,17 +33,23 @@
           <string>Engine Settings</string>
          </property>
          <layout class="QGridLayout" name="gridLayout">
-          <item row="0" column="0">
-           <widget class="QLabel" name="label">
-            <property name="text">
-             <string>Status</string>
+          <item row="1" column="1">
+           <widget class="QPushButton" name="download_engine">
+            <property name="focusPolicy">
+             <enum>Qt::NoFocus</enum>
             </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QLabel" name="loading_movie">
-            <property name="textInteractionFlags">
-             <set>Qt::NoTextInteraction</set>
+            <property name="text">
+             <string>Update</string>
+            </property>
+            <property name="icon">
+             <iconset resource="icons.qrc">
+              <normaloff>:/icons/others/donwload2.png</normaloff>:/icons/others/donwload2.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>15</width>
+              <height>15</height>
+             </size>
             </property>
            </widget>
           </item>
@@ -57,23 +63,10 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="1">
-           <widget class="QPushButton" name="download_engine">
-            <property name="focusPolicy">
-             <enum>Qt::NoFocus</enum>
-            </property>
-            <property name="text">
-             <string>Download/Update</string>
-            </property>
-            <property name="icon">
-             <iconset resource="icons.qrc">
-              <normaloff>:/icons/others/donwload2.png</normaloff>:/icons/others/donwload2.png</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>15</width>
-              <height>15</height>
-             </size>
+          <item row="1" column="2">
+           <widget class="QLabel" name="loading_movie">
+            <property name="textInteractionFlags">
+             <set>Qt::NoTextInteraction</set>
             </property>
            </widget>
           </item>
@@ -287,68 +280,230 @@
            <number>3</number>
           </property>
           <item>
-           <widget class="QFrame" name="frame">
+           <widget class="QFrame" name="frame_4">
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>
             </property>
             <property name="frameShadow">
              <enum>QFrame::Raised</enum>
             </property>
-            <layout class="QVBoxLayout" name="verticalLayout_12">
+            <layout class="QVBoxLayout" name="verticalLayout_17">
              <item>
-              <widget class="QLabel" name="l1">
+              <widget class="QLabel" name="l3">
                <property name="text">
-                <string>Downloaded tracks</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
+                <string>Downloaded videos</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="cached_tracks_size">
-               <property name="text">
-                <string>0</string>
+              <layout class="QHBoxLayout" name="horizontalLayout_4">
+               <property name="topMargin">
+                <number>0</number>
                </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="delete_tracks_cache">
-               <property name="focusPolicy">
-                <enum>Qt::NoFocus</enum>
-               </property>
-               <property name="text">
-                <string>Delete</string>
-               </property>
-               <property name="icon">
-                <iconset resource="icons.qrc">
-                 <normaloff>:/icons/others/remove2.png</normaloff>:/icons/others/remove2.png</iconset>
-               </property>
-               <property name="iconSize">
-                <size>
-                 <width>15</width>
-                 <height>15</height>
-                </size>
-               </property>
-              </widget>
+               <item>
+                <widget class="QLabel" name="cached_videos_size">
+                 <property name="font">
+                  <font>
+                   <pointsize>10</pointsize>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>0</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="controlButton" name="open_video_cache_dir">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
+                 </property>
+                 <property name="toolTip">
+                  <string>Delete Videos</string>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background-color: transparent;
+border:none;</string>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="icons.qrc">
+                   <normaloff>:/icons/micro/open_folder.png</normaloff>:/icons/micro/open_folder.png</iconset>
+                 </property>
+                 <property name="iconSize">
+                  <size>
+                   <width>18</width>
+                   <height>18</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="controlButton" name="delete_videos_cache">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
+                 </property>
+                 <property name="toolTip">
+                  <string>Delete Videos</string>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background-color: transparent;
+border:none;</string>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="icons.qrc">
+                   <normaloff>:/icons/micro/delete.png</normaloff>:/icons/micro/delete.png</iconset>
+                 </property>
+                 <property name="iconSize">
+                  <size>
+                   <width>18</width>
+                   <height>18</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </item>
             </layout>
            </widget>
           </item>
           <item>
-           <widget class="QFrame" name="frame_2">
+           <widget class="QFrame" name="frame_5">
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>
             </property>
             <property name="frameShadow">
              <enum>QFrame::Raised</enum>
             </property>
-            <layout class="QVBoxLayout" name="verticalLayout_13">
+            <layout class="QVBoxLayout" name="verticalLayout_18">
              <item>
-              <widget class="QLabel" name="l2">
+              <widget class="QLabel" name="l3_2">
+               <property name="text">
+                <string>Downloaded tracks</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_5">
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QLabel" name="cached_tracks_size">
+                 <property name="font">
+                  <font>
+                   <pointsize>10</pointsize>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>0</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="controlButton" name="open_tracks_cache_dir">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
+                 </property>
+                 <property name="toolTip">
+                  <string>Delete Videos</string>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background-color: transparent;
+border:none;</string>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="icons.qrc">
+                   <normaloff>:/icons/micro/open_folder.png</normaloff>:/icons/micro/open_folder.png</iconset>
+                 </property>
+                 <property name="iconSize">
+                  <size>
+                   <width>18</width>
+                   <height>18</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="controlButton" name="delete_tracks_cache">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
+                 </property>
+                 <property name="toolTip">
+                  <string>Delete Videos</string>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background-color: transparent;
+border:none;</string>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="icons.qrc">
+                   <normaloff>:/icons/micro/delete.png</normaloff>:/icons/micro/delete.png</iconset>
+                 </property>
+                 <property name="iconSize">
+                  <size>
+                   <width>18</width>
+                   <height>18</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QFrame" name="frame_6">
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_19">
+             <item>
+              <widget class="QLabel" name="l3_3">
                <property name="text">
                 <string>Offline pages</string>
                </property>
@@ -358,47 +513,67 @@
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="offline_pages_size">
-               <property name="text">
-                <string>0</string>
+              <layout class="QHBoxLayout" name="horizontalLayout_6">
+               <property name="topMargin">
+                <number>0</number>
                </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="delete_offline_pages">
-               <property name="focusPolicy">
-                <enum>Qt::NoFocus</enum>
-               </property>
-               <property name="text">
-                <string>Delete</string>
-               </property>
-               <property name="icon">
-                <iconset resource="icons.qrc">
-                 <normaloff>:/icons/others/remove2.png</normaloff>:/icons/others/remove2.png</iconset>
-               </property>
-               <property name="iconSize">
-                <size>
-                 <width>15</width>
-                 <height>15</height>
-                </size>
-               </property>
-              </widget>
+               <item>
+                <widget class="QLabel" name="offline_pages_size">
+                 <property name="text">
+                  <string>0</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="controlButton" name="delete_offline_pages">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
+                 </property>
+                 <property name="toolTip">
+                  <string>Delete Videos</string>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background-color: transparent;
+border:none;</string>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="icons.qrc">
+                   <normaloff>:/icons/micro/delete.png</normaloff>:/icons/micro/delete.png</iconset>
+                 </property>
+                 <property name="iconSize">
+                  <size>
+                   <width>18</width>
+                   <height>18</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </item>
             </layout>
            </widget>
           </item>
           <item>
-           <widget class="QFrame" name="frame_3">
+           <widget class="QFrame" name="frame_7">
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>
             </property>
             <property name="frameShadow">
              <enum>QFrame::Raised</enum>
             </property>
-            <layout class="QVBoxLayout" name="verticalLayout_14">
+            <layout class="QVBoxLayout" name="verticalLayout_20">
              <item>
               <widget class="QLabel" name="l2_2">
                <property name="text">
@@ -410,83 +585,54 @@
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="database_size">
-               <property name="text">
-                <string>0</string>
+              <layout class="QHBoxLayout" name="horizontalLayout_7">
+               <property name="topMargin">
+                <number>0</number>
                </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="drop_database">
-               <property name="focusPolicy">
-                <enum>Qt::NoFocus</enum>
-               </property>
-               <property name="text">
-                <string>Drop</string>
-               </property>
-               <property name="icon">
-                <iconset resource="icons.qrc">
-                 <normaloff>:/icons/others/remove2.png</normaloff>:/icons/others/remove2.png</iconset>
-               </property>
-               <property name="iconSize">
-                <size>
-                 <width>15</width>
-                 <height>15</height>
-                </size>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item>
-           <widget class="QGroupBox" name="groupBox_7">
-            <property name="title">
-             <string>About</string>
-            </property>
-            <layout class="QVBoxLayout" name="verticalLayout_6">
-             <item>
-              <widget class="QPushButton" name="pushButton">
-               <property name="styleSheet">
-                <string notr="true">border:none;</string>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="icon">
-                <iconset resource="icons.qrc">
-                 <normaloff>:/icons/utube.png</normaloff>:/icons/utube.png</iconset>
-               </property>
-               <property name="iconSize">
-                <size>
-                 <width>60</width>
-                 <height>60</height>
-                </size>
-               </property>
-               <property name="flat">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="label_5">
-               <property name="text">
-                <string>By- Keshav Bhatt</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="donate">
-               <property name="text">
-                <string>Donate</string>
-               </property>
-              </widget>
+               <item>
+                <widget class="QLabel" name="database_size">
+                 <property name="text">
+                  <string>0</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="controlButton" name="drop_database">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
+                 </property>
+                 <property name="toolTip">
+                  <string>Delete Videos</string>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background-color: transparent;
+border:none;</string>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="icons.qrc">
+                   <normaloff>:/icons/micro/delete.png</normaloff>:/icons/micro/delete.png</iconset>
+                 </property>
+                 <property name="iconSize">
+                  <size>
+                   <width>18</width>
+                   <height>18</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </item>
             </layout>
            </widget>
@@ -500,6 +646,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>controlButton</class>
+   <extends>QPushButton</extends>
+   <header>controlbutton.h</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="icons.qrc"/>
  </resources>

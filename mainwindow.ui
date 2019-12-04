@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>867</width>
-    <height>541</height>
+    <height>558</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -406,6 +406,59 @@ border-right:0px;
             <property name="bottomMargin">
              <number>1</number>
             </property>
+            <item>
+             <layout class="QHBoxLayout" name="menuLayout">
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <spacer name="horizontalSpacer_4">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QPushButton" name="menuButton">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="toolTip">
+                 <string/>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">border:none;
+background-color: transparent;</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="icon">
+                 <iconset resource="icons.qrc">
+                  <normaloff>:/icons/menu.png</normaloff>:/icons/menu.png</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>22</width>
+                  <height>22</height>
+                 </size>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
             <item>
              <widget class="QWidget" name="right_widget" native="true">
               <property name="styleSheet">
@@ -1349,8 +1402,16 @@ border-radius:2px;</string>
     <addaction name="actionSettings"/>
     <addaction name="actionQuit"/>
    </widget>
+   <widget class="QMenu" name="menuAbout">
+    <property name="title">
+     <string>About</string>
+    </property>
+    <addaction name="actionAccount"/>
+    <addaction name="actionAbout"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuView"/>
+   <addaction name="menuAbout"/>
   </widget>
   <action name="actionFullscreen">
    <property name="text">
@@ -1413,6 +1474,16 @@ border-radius:2px;</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+K</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
+   </property>
+  </action>
+  <action name="actionAccount">
+   <property name="text">
+    <string>Account</string>
    </property>
   </action>
  </widget>

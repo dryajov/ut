@@ -44,9 +44,15 @@
 #include "store.h"
 #include "videooption.h"
 #include "youtube.h"
+#include "accountutils.h"
+
 #include "download_widget.h"
 #include "ui_settings.h"
 #include "ui_track.h"
+#include "ui_about.h"
+#include "ui_account.h"
+#include "accountutils.h"
+
 
 
 namespace Ui {
@@ -72,6 +78,9 @@ public:
     Q_INVOKABLE void showAjaxError();
     Q_INVOKABLE void web_watch_video(QVariant data);
     Q_INVOKABLE void playVideo(QString trackId);
+    Q_INVOKABLE void delete_song_cache(QVariant track_id);
+    Q_INVOKABLE void remove_song(QVariant track_id);
+    Q_INVOKABLE void delete_video_cache(QVariant track_id);
 
     Q_INVOKABLE void browse_youtube();
 
@@ -201,7 +210,25 @@ private slots:
 
     void on_actionDownloaded_Songs_triggered();
 
+    void on_menuButton_clicked();
+
+    void on_actionAbout_triggered();
+    void on_actionAccount_triggered();
+    QString getCurrentPlayerQueue(QString songId);
+    void checkSerial();
+    void check_purchased();
+    void checked_purchase(QString response);
+    void check_pro();
+    void check_payment_made_from_external();
+    void init_accounts();
 private:
+
+    bool pro=false;
+    QString serial;
+    accountUtils *accUtils = nullptr;
+    QWidget *accountWidget;
+
+
     Widget *downloadWidget;
     bool animationRunning = false;
     bool isLoadingResults;
@@ -236,6 +263,8 @@ private:
     Ui::MainWindow *ui;
     Ui::settings settingsUi;
     Ui::track track_ui;
+    Ui::about about_ui;
+    Ui::account account_ui;
     Youtube *youtube;
     VideoOption *videoOption = nullptr;
     QStringList shuffledPlayerQueue;

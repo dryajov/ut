@@ -22,6 +22,8 @@ CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
 
 CONFIG += c++11
 
+LIBS+= -ludev
+
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked as deprecated (the exact warnings
@@ -37,6 +39,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += main.cpp\
+    accountutils.cpp \
     download_widget.cpp \
         mainwindow.cpp \
     DarkStyle.cpp \
@@ -58,10 +61,12 @@ SOURCES += main.cpp\
 
 HEADERS  += mainwindow.h \
     DarkStyle.h \
+    accountutils.h \
     cookiejar.h \
     download_widget.h \
     elidedlabel.h \
     nowplaying.h \
+    serial.h \
     store.h \
     radio.h \
     seekslider.h \
@@ -77,6 +82,8 @@ HEADERS  += mainwindow.h \
     utils.h
 
 FORMS    += mainwindow.ui \
+    about.ui \
+    account.ui \
     download_widget.ui \
     downloaditem.ui \
     equalizer.ui \

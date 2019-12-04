@@ -20,6 +20,9 @@
 #include "lyrics.h"
 #include "manifest_resolver.h"
 #include "utils.h"
+#include "serial.h"
+
+QString tempSerial;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -27,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->debug_widget->hide();
+    ui->menuLayout->insertWidget(0,ui->menuBar);
 
     qApp->setQuitOnLastWindowClosed(true);
 
@@ -35,6 +39,10 @@ MainWindow::MainWindow(QWidget *parent) :
     init_offline_storage();
     init_settings();
     init_lyrics();
+
+    //temp
+   // init_accounts();
+    ui->actionAccount->setVisible(false);
 
     init_downloadWidget();
 
@@ -224,10 +232,6 @@ void MainWindow::init_settings(){
             util->deleteLater();
         }
     });
-    connect(settingsUi.donate,&QPushButton::clicked,[=](){
-        settingsWidget->close();
-        ui->webview->load(QUrl("https://paypal.me/keshavnrj/5"));
-    });
     connect(settingsUi.delete_tracks_cache,&QPushButton::clicked,[=](){
           QMessageBox msgBox;
           msgBox.setText("This will delete all downloaded songs!");
@@ -244,6 +248,28 @@ void MainWindow::init_settings(){
                       settingsUi.cached_tracks_size->setText(util->refreshCacheSize(setting_path+"/downloadedTracks"));
                       util->deleteLater();
                       clear_queue();
+                      loadPlayerQueue();
+              break;}
+            case  QMessageBox::No:
+              break;
+          }
+    });
+
+    connect(settingsUi.delete_videos_cache,&QPushButton::clicked,[=](){
+          QMessageBox msgBox;
+          msgBox.setText("This will delete all downloaded videos!");
+                msgBox.setIconPixmap(QPixmap(":/icons/sidebar/info.png").scaled(42,42,Qt::KeepAspectRatio,Qt::SmoothTransformation));
+
+          msgBox.setInformativeText("Delete all downloaded videos cache ?");
+          msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+          msgBox.setDefaultButton(QMessageBox::No);
+          int ret = msgBox.exec();
+          switch (ret) {
+            case QMessageBox::Yes:{
+                  utils* util = new utils(this);
+                      util->delete_cache(setting_path+"/downloadedVideos");
+                      settingsUi.cached_videos_size->setText(util->refreshCacheSize(setting_path+"/downloadedVideos"));
+                      util->deleteLater();
                       loadPlayerQueue();
               break;}
             case  QMessageBox::No:
@@ -272,6 +298,13 @@ void MainWindow::init_settings(){
             case  QMessageBox::No:
               break;
           }
+    });
+
+    connect(settingsUi.open_tracks_cache_dir,&controlButton::clicked,[=](){
+        QDesktopServices::openUrl(QUrl("file://"+setting_path+"/downloadedTracks"));
+    });
+    connect(settingsUi.open_video_cache_dir,&controlButton::clicked,[=](){
+        QDesktopServices::openUrl(QUrl("file://"+setting_path+"/downloadedVideos"));
     });
 
     connect(settingsUi.plus,SIGNAL(clicked(bool)),this,SLOT(zoomin()));
@@ -341,8 +374,7 @@ void MainWindow::loadSettings(){
 void MainWindow::add_colors_to_color_widget(){
 
         color_list<<"fakeitem"<<"#FF0034"<<"#2A82DA"<<"#029013"
-                        <<"#D22298"<<"#FF901F"<<"#565655"
-                        <<"#2B2929"<<"#E95420"<<"#6C2164";
+                        <<"#D22298"<<"#FF901F"<<"#565655";
 
         QObject *layout = settingsWidget->findChild<QObject*>("themeHolderGridLayout");
         int row=0;
@@ -444,10 +476,6 @@ void MainWindow::set_app_theme(QColor rgb){
     settingsUi.download_engine->setStyleSheet(btn_style);
     settingsUi.plus->setStyleSheet(btn_style);
     settingsUi.minus->setStyleSheet(btn_style);
-    settingsUi.delete_offline_pages->setStyleSheet(btn_style);
-    settingsUi.delete_tracks_cache->setStyleSheet(btn_style);
-    settingsUi.drop_database->setStyleSheet(btn_style);
-
 
 }
 
@@ -462,7 +490,7 @@ void SelectColorButton::updateColor(){
 }
 
 void SelectColorButton::changeColor(){
-   QColor newColor = QColorDialog::getColor(color,parentWidget());
+   QColor newColor = QColorDialog::getColor(color,parentWidget(),"Choose theme color",QColorDialog::DontUseNativeDialog);
    if ( newColor != color )
    {
            setColor( newColor );
@@ -709,6 +737,7 @@ void MainWindow::loadPlayerQueue(){ //  #7
 
             ui->right_list_2->setItemWidget(item, track_widget);
 
+            //set size for track widget
             track_ui.cover->setMaximumSize(149,90);
             track_ui.cover->setMinimumSize(149,79);
             track_ui.widget->adjustSize();
@@ -903,8 +932,11 @@ void MainWindow::resultLoaded(){
 }
 
 
-void MainWindow::addToQueue(QString id,QString title,QString artist,QString album,QString base64,QString dominantColor,QString songId,QString albumId,QString artistId){
+void MainWindow::addToQueue(QString id,QString title,
+                            QString artist,QString album,QString base64,
+                            QString dominantColor,QString songId,QString albumId,QString artistId){
 
+    id = id.remove("<br>");
     QString setting_path =  QStandardPaths::writableLocation(QStandardPaths::DataLocation);
 
     if(store_manager->isInQueue(songId)){
@@ -1144,6 +1176,74 @@ void MainWindow::showTrackOption(){
     menu.addAction(deleteSongCache);
     menu.setStyleSheet(menuStyle());
     menu.exec(QCursor::pos());
+}
+
+void MainWindow::remove_song(QVariant track_id){
+    QString songId = track_id.toString().remove("<br>").trimmed();
+    QListWidget *queue = this->findChild<QListWidget*>(getCurrentPlayerQueue(songId));
+    if(queue!=nullptr){
+        QWidget *listWidgetItem = queue->findChild<QWidget*>("track-widget-"+songId);
+        if(listWidgetItem!=nullptr){
+            for (int i= 0;i<queue->count();i++) {
+                QString songIdFromWidget = static_cast<QLineEdit*>(queue->itemWidget(queue->item(i))->findChild<QLineEdit*>("songId"))->text().trimmed();
+                 if(songIdFromWidget.contains(songId)){
+                    queue->takeItem(i);
+                 }
+            }
+           store_manager->removeFromQueue(songId);
+        }
+    }
+}
+
+void MainWindow::delete_song_cache(QVariant track_id){
+    QString songId = track_id.toString().remove("<br>").trimmed();
+    QString setting_path =  QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+    QFile cache(setting_path+"/downloadedTracks/"+songId);
+    cache.remove();
+    store_manager->update_track("downloaded",songId,"0");
+
+    for (int i= 0;i<ui->right_list_2->count();i++) {
+       QString songIdFromWidget = static_cast<QLineEdit*>(ui->right_list_2->itemWidget(ui->right_list_2->item(i))->findChild<QLineEdit*>("songId"))->text().trimmed();
+        if(songId==songIdFromWidget){
+            ui->right_list_2->itemWidget(ui->right_list_2->item(i))->findChild<QLabel*>("offline")->setPixmap(QPixmap(":/icons/blank.png"));
+            ui->right_list_2->itemWidget(ui->right_list_2->item(i))->findChild<QLineEdit*>("url")->setText(store_manager->getOfflineUrl(songId));
+            if(store_manager->getExpiry(songId)){
+                ui->right_list_2->itemWidget(ui->right_list_2->item(i))->setEnabled(false);
+                getAudioStream(store_manager->getYoutubeIds(songId),songId);
+            }
+            break;
+        }
+    }
+}
+
+void MainWindow::delete_video_cache(QVariant track_id){
+    QString songId = track_id.toString().remove("<br>").trimmed();
+    QString setting_path =  QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+    QStringList exts;
+    exts<< +".webm"<<".mp4"<<".mpeg"<<".mkv"<<".avi"<<".flv"<<".ogv"<<".ogg";
+    QString ext;
+    foreach (ext, exts) {
+        QFile cache(setting_path+"/downloadedVideos/"+songId+ext);
+        if(QFileInfo(cache).exists()){
+            cache.remove();
+            break;
+        }
+    }
+}
+
+//returns the player queue where the player is playing track
+QString MainWindow::getCurrentPlayerQueue(QString songId){
+    QString listName;
+    QList<QWidget*>listWidgetItems = ui->right_panel->findChildren<QWidget*>("track-widget-"+songId);
+    if(listWidgetItems.isEmpty()){
+        qDebug()<<"PLAYER QUEUE NOT FOUND";
+    }else{
+        foreach (QWidget *listWidgetItem, listWidgetItems) {
+            QListWidget *listWidget = static_cast<QListWidget*>(listWidgetItem->parent()->parent());
+            listName = listWidget->objectName();
+        }
+    }
+    return listName;
 }
 
 void MainWindow::web_watch_video(QVariant data){
@@ -1401,14 +1501,6 @@ void MainWindow::show_local_saved_videos(){
 void MainWindow::on_right_list_2_itemDoubleClicked(QListWidgetItem *item)
 {
     listItemDoubleClicked(ui->right_list_2,item);
-
-//    //hide playing labels in other list
-//    QList<QLabel*> playing_label_list_other;
-//    playing_label_list_other = ui->right_list->findChildren<QLabel*>("playing");
-//    foreach (QLabel *playing, playing_label_list_other) {
-//        playing->setPixmap(QPixmap(":/icons/blank.png").scaled(playing->size(),Qt::KeepAspectRatio,Qt::SmoothTransformation));
-//        playing->setToolTip("");
-//    }
 }
 
 void MainWindow::listItemDoubleClicked(QListWidget *list,QListWidgetItem *item){
@@ -1536,42 +1628,7 @@ void MainWindow::listItemDoubleClicked(QListWidget *list,QListWidgetItem *item){
             g="164";
             b="205";
         }
-
-        ui->nowplaying_widget->setColor(QColor(r.toInt(),g.toInt(),b.toInt()));
-        //change the color of main window according to album cover bug here
-        this->setStyleSheet(+"QMainWindow{"
-                               "background-color:rgba("+r+","+g+","+b+","+"0.1"+");"
-                               "background-image:url(:/icons/texture.png), linear-gradient(hsla(0,0%,32%,.99), hsla(0,0%,27%,.95));"
-                               "}");
-
-        QString widgetStyle= "background-color:"
-                             "qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,"
-                             "stop:0.129213 rgba("+r+", "+g+", "+b+", 30),"
-                             "stop:0.38764 rgba("+r+", "+g+", "+b+", 120),"
-                             "stop:0.679775 rgba("+r+", "+g+", "+b+", 84),"
-                             "stop:1 rgba("+r+", "+g+", "+b+", 30));";
-        QString scrollbarStyle ="QScrollBar:vertical {"
-                                    "background-color: transparent;"
-                                    "border:none;"
-                                    "width: 10px;"
-                                    "margin: 22px 0 22px 0;"
-                                "}"
-                                "QScrollBar::handle:vertical {"
-                                    "background: grey;"
-                                    "min-height: 20px;"
-                                "}";
-        ui->right_panel->setStyleSheet("QWidget#right_panel{"+widgetStyle+"}");
-        ui->right_list_2->setStyleSheet("QListWidget{"+widgetStyle+"}"+scrollbarStyle);
-
-        ui->search->setStyleSheet(widgetStyle+"border:none;border-radius:0px;");
-
-        //settingsUi theme is set when it is opened;
-        ui->stream_info->setStyleSheet("QWidget#stream_info{"+widgetStyle+"}"); //to remove style set by designer
-
-
-
-        QString rgba = r+","+g+","+b+","+"0.2";
-        ui->webview->page()->mainFrame()->evaluateJavaScript("changeBg('"+rgba+"')");
+        set_app_theme(QColor(r.toInt(),g.toInt(),b.toInt()));
     }
     ui->webview->page()->mainFrame()->evaluateJavaScript("setNowPlaying('"+songId+"')");
 }
@@ -1598,6 +1655,7 @@ void MainWindow::on_settings_clicked()
         utils* util = new utils(this);
 
         settingsUi.cached_tracks_size->setText(util->refreshCacheSize(setting_path+"/downloadedTracks"));
+        settingsUi.cached_videos_size->setText(util->refreshCacheSize(setting_path+"/downloadedVideos"));
         settingsUi.offline_pages_size->setText(util->refreshCacheSize(setting_path+"/paginator"));
         settingsUi.database_size->setText(util->refreshCacheSize(setting_path+"/storeDatabase/"+database));
 
@@ -1749,16 +1807,16 @@ void MainWindow::playLocalTrack(QVariant songIdVar){
         id = trackDetails.at(8);
         dominantColor = trackDetails.at(9);
         addToQueue(id,title,artist,album,base64,dominantColor,songId,albumId,artistId);
-    }else{//else find and play the track
-        for (int i= 0;i<ui->right_list_2->count();i++) {
-           QString songIdFromWidget = static_cast<QLineEdit*>(ui->right_list_2->itemWidget(ui->right_list_2->item(i))->findChild<QLineEdit*>("songId"))->text().trimmed();
-            if(songId==songIdFromWidget){
-                ui->tabWidget->setCurrentWidget(ui->tab_2);
-                ui->right_list_2->setCurrentRow(i);
-                listItemDoubleClicked(ui->right_list_2,ui->right_list_2->item(i));
-                ui->right_list_2->scrollToItem(ui->right_list_2->item(i));
-                break;
-            }
+    }
+    //else find and play the track
+    for (int i= 0;i<ui->right_list_2->count();i++) {
+       QString songIdFromWidget = static_cast<QLineEdit*>(ui->right_list_2->itemWidget(ui->right_list_2->item(i))->findChild<QLineEdit*>("songId"))->text().trimmed();
+        if(songId==songIdFromWidget){
+            ui->tabWidget->setCurrentWidget(ui->tab_2);
+            ui->right_list_2->setCurrentRow(i);
+            listItemDoubleClicked(ui->right_list_2,ui->right_list_2->item(i));
+            ui->right_list_2->scrollToItem(ui->right_list_2->item(i));
+            break;
         }
     }
 }
@@ -2682,7 +2740,229 @@ void MainWindow::on_actionHome_triggered()
     browse_youtube();
 }
 
+void MainWindow::on_actionAbout_triggered()
+{
+    QWidget *aboutWidget = new QWidget(0);
+
+    aboutWidget->setWindowModality(Qt::ApplicationModal);
+    aboutWidget->setWindowFlags(Qt::Dialog);
+    about_ui.setupUi(aboutWidget);
+
+    connect(about_ui.donate,&QPushButton::clicked,[=](){
+        QDesktopServices::openUrl(QUrl("https://paypal.me/keshavnrj/4"));
+    });
+    connect(about_ui.github,&QPushButton::clicked,[=](){
+        QDesktopServices::openUrl(QUrl("https://github.com/keshavbhatt/olivia"));
+    });
+    connect(about_ui.rate,&QPushButton::clicked,[=](){
+        QDesktopServices::openUrl(QUrl("snap://utube"));
+    });
+
+    aboutWidget->setWindowTitle(QApplication::applicationName() +" | About");
+    aboutWidget->move(QApplication::desktop()->screen()->rect().center()-aboutWidget->rect().center());
+    aboutWidget->showNormal();
+}
+
+void MainWindow::on_actionAccount_triggered()
+{
+//show  hide accounts widget
+    accountWidget->move(QApplication::desktop()->screen()->rect().center()-accountWidget->rect().center());
+    accountWidget->showNormal();
+}
+
 void MainWindow::on_actionDownloaded_Songs_triggered()
 {
     show_local_saved_songs();
 }
+
+void MainWindow::on_menuButton_clicked()
+{
+   QAction *showHideMenu= new QAction("Show Menu Bar",nullptr);
+   QAction *settings= new QAction("Settings",nullptr);
+   QAction *account= new QAction("Account",nullptr);
+   QAction *about= new QAction("About",nullptr);
+
+
+   showHideMenu->setCheckable(true);
+   showHideMenu->setChecked(ui->menuBar->isVisible());
+   connect(showHideMenu,&QAction::triggered,[=](bool checked){
+       if(checked){
+           ui->menuBar->show();
+       }else{
+           ui->menuBar->hide();
+       }
+   });
+   connect(settings,&QAction::triggered,[=](){
+        ui->settings->click();
+   });
+   connect(about,&QAction::triggered,[=](){
+        ui->actionAbout->trigger();
+   });
+   connect(account,&QAction::triggered,[=](){
+        ui->actionAccount->trigger();
+   });
+
+   QMenu menu;
+   menu.addAction(showHideMenu);
+   menu.addAction(settings);
+//   menu.addAction(account);
+   menu.addAction(about);
+   menu.exec(QCursor::pos());
+}
+
+
+//==========================ACCOUNT SETTING=================================================
+void MainWindow::init_accounts(){
+    accUtils = new accountUtils(this);
+
+    accountWidget = new QWidget(this);
+    accountWidget->setWindowModality(Qt::ApplicationModal);
+    accountWidget->setWindowFlags(Qt::Dialog);
+    account_ui.setupUi(accountWidget);
+
+    connect(account_ui.restore_purchase,SIGNAL(clicked(bool)),this,SLOT(check_purchased()));
+    if(account_ui.acc_type->text().contains("pro")){
+        account_ui.restore_purchase->setEnabled(false);
+    }
+
+    accountWidget->setWindowTitle(QApplication::applicationName() +" | Account");
+
+    checkSerial();
+
+    check_pro();
+}
+void MainWindow::checkSerial(){
+
+   tempSerial = QString(getSerial().split("_").last());
+
+   if(tempSerial.trimmed().isEmpty()){
+       QProcess *serialProcess = new QProcess(this);
+       QString serialCommand = "udevadm info --query=all --name=/dev/sda | grep ID_SERIAL_SHORT";
+       serialProcess->setProcessChannelMode(QProcess::MergedChannels);
+       connect(serialProcess,&QProcess::readyRead,[=](){
+           if(tempSerial.contains("device"))
+               tempSerial.clear();
+       });
+       serialProcess->start("bash",QStringList()<<"-c"<<serialCommand);
+       serialProcess->waitForStarted();
+       serialProcess->waitForFinished();
+   }
+
+    if(tempSerial.trimmed().isEmpty()){
+        QProcess *serialProcess = new QProcess(this);
+        QString serialCommand = "udevadm info --query=all --name=/dev/nvme0 | grep ID_SERIAL_SHORT";
+        serialProcess->setProcessChannelMode(QProcess::MergedChannels);
+        connect(serialProcess,&QProcess::readyRead,[=](){
+            tempSerial= serialProcess->readAll();
+            if(tempSerial.contains("device"))
+                tempSerial.clear();
+        });
+        serialProcess->start("bash",QStringList()<<"-c"<<serialCommand);
+        serialProcess->waitForStarted();
+        serialProcess->waitForFinished();
+    }
+
+    if(tempSerial.trimmed().isEmpty()){
+        QProcess *serialProcess = new QProcess(this);
+        QString serialCommand = "udevadm info --query=all --name=/dev/nvme0n1 | grep ID_SERIAL_SHORT";
+        serialProcess->setProcessChannelMode(QProcess::MergedChannels);
+        connect(serialProcess,&QProcess::readyRead,[=](){
+            tempSerial= serialProcess->readAll();
+            if(tempSerial.contains("device"))
+                tempSerial.clear();
+        });
+        serialProcess->start("bash",QStringList()<<"-c"<<serialCommand);
+        serialProcess->waitForStarted();
+        serialProcess->waitForFinished();
+    }
+     serial = tempSerial.split("=").last().trimmed();
+
+    if(serial.trimmed().isEmpty()){
+        QMessageBox msgBox;
+        msgBox.setText("<b>"+qApp->applicationName()+" requires hardware-observe permission.</b>");
+        msgBox.setIcon(QMessageBox::Information);
+        msgBox.setInformativeText(qApp->applicationName()+" uses system information to save your profile related functionalities, for that to work <b>hardware-observe</b> permission is required.\n"
+                                  "<br><br><b>Method 1:</b> Open Ubuntu Softwares App and allow hardware-observe option for "+qApp->applicationName()+" snap and restart the application after doing this.\n"
+                                  "<br><br><b>Method 2:</b> Open a terminal window and run this command- <b>snap connect "+qApp->applicationName()+":hardware-observe</b> and restart the application after doing this.");
+        msgBox.setStandardButtons(QMessageBox::Ok);
+        msgBox.setWindowModality(Qt::ApplicationModal);
+        msgBox.setDefaultButton(QMessageBox::Ok);
+        int ret= msgBox.exec();
+        switch (ret){
+        case QMessageBox::Ok:
+//            qApp->closeAllWindows();
+//            qApp->quit();
+            break;
+        default:
+//            qApp->closeAllWindows();
+//            qApp->quit();
+            break;
+        }
+    }else{
+        qWarning()<<serial<<" :serial";
+        account_ui.id->setText(serial);
+            if(!settingsObj.value("account_created").toBool()==true){
+//               connect(accUtils,SIGNAL(creating_account(QString)),this,SLOT(creating_acc(QString)));
+               //accUtils->createAccount(serial);
+            }
+    }
+}
+
+void MainWindow::check_purchased(){
+//  http://www.ktechpit.com/USS/WW/accounts/html/chkout/check.php?username=Completed%20S2RBNXBH222322V
+    connect(accUtils,SIGNAL(purchase_checked(QString)),this,SLOT(checked_purchase(QString)));
+    accUtils->check_purchased(serial);
+    account_ui.restore_purchase->setText("Checking..");
+    account_ui.restore_purchase->setEnabled(false);
+}
+
+void MainWindow::checked_purchase(QString response){
+    qDebug()<<"Account found="<<response;
+    account_ui.restore_purchase->setText("Restore Purchase");
+    account_ui.restore_purchase->setEnabled(true);
+    if(response.contains("true")){
+        check_pro();
+        account_ui.acc_type->setText("Pro");
+        account_ui.restore_purchase->setEnabled(false);
+        settingsObj.setValue("wonderwall",QString("activated").toUtf8().toBase64());
+//        ui->pay_from_external->hide();
+        check_payment_made_from_external();
+    }else{
+        check_pro();
+        account_ui.acc_type->setText("Evaluation");
+        account_ui.restore_purchase->setEnabled(true);
+    }
+}
+
+void MainWindow::check_pro(){
+    if(settingsObj.value(qApp->applicationName()).isValid()){
+       QByteArray b;
+       b = settingsObj.value(qApp->applicationName()).toByteArray() ;
+       QString s = QByteArray::fromBase64(b);
+       if(s=="activated")
+       pro= true;
+       account_ui.acc_type->setText("Pro");
+       account_ui.restore_purchase->setEnabled(false);
+       account_ui.buy->setEnabled(false);
+    }else{
+       pro=false;
+       account_ui.acc_type->setText("Evaluation");
+       account_ui.buy->setEnabled(true);
+       account_ui.restore_purchase->setEnabled(true);
+    }
+}
+
+void MainWindow::check_payment_made_from_external(){
+    settingsObj.setValue(qApp->applicationName(),QString("activated").toUtf8().toBase64());
+    check_pro();
+    account_ui.restore_purchase->click();
+    QMessageBox msgBox;
+    msgBox.setText("<b>Welcome to "+qApp->applicationName()+" Pro</b>");
+    msgBox.setIcon(QMessageBox::Information);
+    msgBox.setInformativeText("You upgraded "+qApp->applicationName()+" to Pro version,<br>Enjoy.");
+    msgBox.setStandardButtons(QMessageBox::Ok);
+    msgBox.setWindowModality(Qt::ApplicationModal);
+    msgBox.setDefaultButton(QMessageBox::Ok);
+    msgBox.exec();
+}
+//==========================END ACCOUNT SETTING=================================================

@@ -102,5 +102,6 @@
         <file>icons/sidebar/spotify.png</file>
         <file>icons/ktube.png</file>
         <file>icons/utube.png</file>
+        <file>icons/micro/delete.png</file>
     </qresource>
 </RCC>
